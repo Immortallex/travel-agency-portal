@@ -1,7 +1,7 @@
 "use server";
-import dbConnect from "@/lib/mongodb";
-import Application from "@/models/Application";
-import User from "@/models/User";
+import dbConnect from "../../../lib/db"; // Using a direct relative path is safer
+import Application from "../../models/Application";
+import User from "../../models/User";
 import nodemailer from 'nodemailer';
 
 export async function approveApplication(appId: string) {
