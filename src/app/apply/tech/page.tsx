@@ -1,5 +1,5 @@
 "use client";
-import { Code, Github, Terminal } from 'lucide-react';
+import { Code, Terminal, Globe } from 'lucide-react';
 
 export default function TechApplication() {
   return (
