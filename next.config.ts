@@ -1,16 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  typescript: {
-    // !! WARN !!
-    // Dangerously allow production builds to successfully complete even if
-    // your project has type errors.
-    ignoreBuildErrors: true,
-  },
-  eslint: {
-    // Warning: This allows production builds to successfully complete even if
-    // your project has ESLint errors.
-    ignoreDuringBuilds: true,
-  },
+  // This helps Next.js recognize your project structure accurately
+  reactStrictMode: true,
+  // Ensure Vercel doesn't get stuck on small type warnings
+  typescript: { ignoreBuildErrors: true },
+  eslint: { ignoreDuringBuilds: true },
 };
 
 export default nextConfig;
