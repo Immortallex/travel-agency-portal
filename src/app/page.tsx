@@ -1,108 +1,64 @@
+"use client";
 import Image from 'next/image';
 import Link from 'next/link';
-import { 
-  Shield, 
-  Plane, 
-  Users, 
-  Code, 
-  GraduationCap, 
-  MessageCircle, 
-  Trophy,
-  ArrowRight
-} from 'lucide-react';
+import { Shield, Code, GraduationCap, Trophy, Users, MessageCircle, ArrowRight } from 'lucide-react';
 
 export default function HomePage() {
   return (
     <main className="min-h-screen bg-white text-[#0A192F]">
-      {/* --- HERO SECTION --- */}
-      <section className="relative h-[90vh] flex items-center justify-center overflow-hidden">
+      {/* ELITE HERO SECTION */}
+      <section className="relative h-[85vh] w-full flex items-center justify-center overflow-hidden bg-[#0A192F]">
         <Image 
           src="https://unsplash.com" 
-          alt="FlyPath Global Reach" 
+          alt="FlyPath Global" 
           fill 
-          className="object-cover brightness-[0.3]"
+          className="object-cover opacity-40 select-none"
           priority
         />
-        <div className="relative z-10 text-center text-white px-6">
-          <div className="inline-block mb-6 px-4 py-1 border border-white/30 rounded-full backdrop-blur-sm text-sm tracking-widest uppercase">
-            Global Migration Experts
-          </div>
-          <h1 className="text-6xl md:text-8xl font-black tracking-tighter mb-4 uppercase italic">
+        <div className="relative z-10 text-center px-4 max-w-5xl">
+          <h1 className="text-4xl md:text-7xl font-black text-white mb-6 uppercase italic tracking-tighter">
             FlyPath <span className="text-blue-500">Travels</span>
           </h1>
-          <p className="text-xl max-w-2xl mx-auto mb-10 text-slate-300 font-light tracking-wide leading-relaxed">
-            Specialized relocation and skill-based migration for the world's most talented professionals and athletes.
+          <p className="text-base md:text-xl text-slate-300 font-light mb-10 max-w-2xl mx-auto leading-relaxed">
+            Premium Global Relocation & Skill-Based Migration for Professionals, Athletes, and Humanitarian Cases.
           </p>
-          <div className="flex flex-col md:flex-row justify-center gap-6">
-            <Link href="/auth" className="bg-blue-600 hover:bg-blue-700 px-12 py-5 rounded-full font-bold transition-all shadow-2xl flex items-center justify-center gap-2">
-              Start Application <ArrowRight size={20} />
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
+            <Link href="/auth" className="bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 rounded-full font-bold text-lg transition-all shadow-2xl flex items-center justify-center gap-2">
+              Begin Application <ArrowRight size={20} />
             </Link>
-            <Link href="/track" className="bg-white/10 backdrop-blur-md border border-white/20 px-12 py-5 rounded-full font-bold hover:bg-white/20 transition-all flex items-center justify-center">
-              Track Status
+            <Link href="/track" className="bg-white/10 backdrop-blur-md border border-white/20 text-white px-10 py-4 rounded-full font-bold text-lg hover:bg-white/20 transition-all">
+              Track ID Status
             </Link>
           </div>
         </div>
       </section>
 
-      {/* --- HUMANITARIAN PLEDGE SECTION --- */}
-      <section className="py-28 px-6 bg-slate-50 border-y border-slate-200">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-20 items-center">
-          <div className="relative h-[500px] rounded-[3rem] overflow-hidden shadow-2xl border-8 border-white">
+      {/* HUMANITARIAN MISSION (Optimized for Mobile) */}
+      <section className="py-20 px-6 bg-slate-50">
+        <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-12">
+          <div className="w-full lg:w-1/2 relative h-[300px] md:h-[450px] rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-white">
             <Image 
               src="https://unsplash.com" 
-              alt="FlyPath Humanity" 
+              alt="Humanitarian Pledge" 
               fill 
               className="object-cover"
             />
           </div>
-          <div>
-            <div className="inline-flex items-center gap-2 bg-blue-600 text-white px-5 py-2 rounded-full font-bold text-xs mb-8 uppercase tracking-widest">
-              <Shield size={18} /> Humanitarian Pledge
+          <div className="w-full lg:w-1/2 text-center lg:text-left">
+            <div className="bg-blue-600 text-white px-4 py-1 rounded-full text-xs font-bold inline-block mb-6 uppercase tracking-widest">
+              <Shield size={16} className="inline mr-2" /> Humanitarian Pledge
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold mb-8 leading-tight">Relocating the Incapacitated</h2>
-            <p className="text-xl text-slate-600 italic leading-relaxed mb-10 border-l-4 border-blue-600 pl-6">
-              "We believe mobility is a human right. FlyPath Travels facilitates the safe relocation of incapacitated individuals globally. This service is provided <strong>entirely pro-bono</strong>. We do not collect a single dime for these humanitarian cases."
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">Relocating the Incapacitated</h2>
+            <p className="text-lg text-slate-600 italic leading-relaxed mb-8 border-l-4 border-blue-600 pl-6 text-left">
+              "We provide safe relocation for incapacitated individuals worldwide <strong>pro-bono</strong>. We do not collect fees for these cases."
             </p>
-            <div className="bg-white p-8 rounded-3xl shadow-sm border border-blue-50">
-              <h4 className="font-bold text-blue-600 uppercase text-sm mb-2">Zero-Fee Commitment</h4>
-              <p className="text-slate-500">Logistics, medical coordination, and visa support are fully covered by FlyPath for verified humanitarian cases.</p>
-            </div>
           </div>
         </div>
       </section>
 
-      {/* --- SKILL PATHWAYS --- */}
-      <section className="py-28 px-6 max-w-7xl mx-auto">
-        <div className="text-center mb-20">
-          <h3 className="text-4xl font-bold mb-4 uppercase tracking-tighter">Choose Your Pathway</h3>
-          <p className="text-slate-500">Select a specialized relocation category to begin your process.</p>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {[
-            { name: 'Technology', icon: <Code size={40} />, link: '/apply/tech', color: 'bg-blue-50' },
-            { name: 'Education', icon: <GraduationCap size={40} />, link: '/apply/education', color: 'bg-purple-50' },
-            { name: 'Sports', icon: <Trophy size={40} />, link: '/apply/sports', color: 'bg-orange-50' },
-            { name: 'Family', icon: <Users size={40} />, link: '/apply/family', color: 'bg-green-50' },
-          ].map((path) => (
-            <Link key={path.name} href={path.link} className="group p-10 border border-slate-100 rounded-[2.5rem] hover:shadow-2xl hover:border-blue-500 transition-all text-center">
-              <div className={`mb-6 p-4 rounded-2xl inline-block ${path.color} text-[#0A192F] group-hover:scale-110 transition-transform`}>
-                {path.icon}
-              </div>
-              <p className="font-black text-xl mb-2 uppercase">{path.name}</p>
-              <p className="text-slate-400 text-sm">Professional Migration Path</p>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* --- FLOATING WHATSAPP BUTTON --- */}
-      <a 
-        href="https://wa.me" 
-        target="_blank" 
-        rel="noopener noreferrer"
-        className="fixed bottom-10 right-10 bg-[#25D366] text-white p-5 rounded-full shadow-2xl hover:scale-110 active:scale-95 transition-all z-50 animate-bounce"
-      >
-        <MessageCircle size={36} />
+      {/* WHATSAPP FLOAT */}
+      <a href="https://wa.me" target="_blank" className="fixed bottom-8 right-8 bg-[#25D366] text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-all z-50 animate-bounce">
+        <MessageCircle size={32} />
       </a>
     </main>
   );
