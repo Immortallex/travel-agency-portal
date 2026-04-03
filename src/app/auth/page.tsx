@@ -1,52 +1,66 @@
-import React from 'react';
-import { Lock, Mail, User } from 'lucide-react';
+"use client";
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Mail, Lock, User, Loader2 } from 'lucide-react';
 
 export default function AuthPage() {
+  const [isLogin, setIsLogin] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    // This simulates the backend call. Once your MONGODB_URI is in Vercel, 
+    // we will connect this to a real API route.
+    setTimeout(() => {
+      setLoading(false);
+      router.push('/profile'); // Redirect to profile after "success"
+    }, 1500);
+  };
+
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 border border-slate-200">
+    <div className="min-h-screen bg-[#0A192F] flex items-center justify-center px-4">
+      <div className="max-w-md w-full bg-white rounded-[2.5rem] p-10 shadow-2xl">
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-[#0A192F]">Welcome to FlyPath</h2>
-          <p className="text-slate-500 mt-2">Please create an account with your real information to access application forms.</p>
+          <h2 className="text-3xl font-black text-slate-900 uppercase">
+            {isLogin ? 'Login' : 'Create Account'}
+          </h2>
+          <p className="text-slate-500 text-sm mt-2">Access the FlyPath Travels Portal</p>
         </div>
 
-        <form className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {!isLogin && (
+            <div className="relative">
+              <User className="absolute left-4 top-4 text-slate-400" size={20} />
+              <input type="text" placeholder="Full Name" className="w-full pl-12 pr-4 py-4 border rounded-2xl bg-slate-50 outline-none focus:ring-2 focus:ring-blue-500" required />
+            </div>
+          )}
           <div className="relative">
-            <User className="absolute left-3 top-3 text-slate-400" size={20} />
-            <input 
-              type="text" 
-              placeholder="Full Name (As on Passport)" 
-              className="w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition"
-              required 
-            />
+            <Mail className="absolute left-4 top-4 text-slate-400" size={20} />
+            <input type="email" placeholder="Email Address" className="w-full pl-12 pr-4 py-4 border rounded-2xl bg-slate-50 outline-none focus:ring-2 focus:ring-blue-500" required />
           </div>
           <div className="relative">
-            <Mail className="absolute left-3 top-3 text-slate-400" size={20} />
-            <input 
-              type="email" 
-              placeholder="Email Address" 
-              className="w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition"
-              required 
-            />
+            <Lock className="absolute left-4 top-4 text-slate-400" size={20} />
+            <input type="password" placeholder="Password" className="w-full pl-12 pr-4 py-4 border rounded-2xl bg-slate-50 outline-none focus:ring-2 focus:ring-blue-500" required />
           </div>
-          <div className="relative">
-            <Lock className="absolute left-3 top-3 text-slate-400" size={20} />
-            <input 
-              type="password" 
-              placeholder="Create Secure Password" 
-              className="w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition"
-              required 
-            />
-          </div>
-          
-          <button className="w-full bg-[#0A192F] text-white py-3 rounded-lg font-bold hover:bg-slate-800 transition mt-4">
-            Create Account
+
+          <button 
+            type="submit" 
+            disabled={loading}
+            className="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold hover:bg-blue-700 transition-all flex items-center justify-center gap-2"
+          >
+            {loading ? <Loader2 className="animate-spin" /> : (isLogin ? 'Login' : 'Create Account')}
           </button>
         </form>
 
-        <p className="text-center text-sm text-slate-500 mt-6">
-          Already have an account? <span className="text-blue-600 font-semibold cursor-pointer">Log In</span>
-        </p>
+        <button 
+          onClick={() => setIsLogin(!isLogin)}
+          className="w-full mt-6 text-sm text-blue-600 font-bold"
+        >
+          {isLogin ? "Don't have an account? Sign Up" : "Already have an account? Login"}
+        </button>
       </div>
     </div>
   );
