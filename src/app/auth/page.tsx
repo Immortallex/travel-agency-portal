@@ -48,6 +48,13 @@ export default function AuthPage() {
         <button type="button" onClick={() => setIsLogin(!isLogin)} className="w-full text-blue-600 text-sm font-bold mt-4 uppercase">
           {isLogin ? "Need an account? Sign Up" : "Have an account? Login"}
         </button>
+	
+<div className="flex justify-between items-center mt-2 px-2">
+  <button type="button" onClick={() => alert("Password reset link sent to your email (Simulated)")} className="text-xs text-slate-400 hover:text-blue-600 font-bold">
+    FORGOT PASSWORD?
+  </button>
+</div>
+
       </form>
     </div>
   );
