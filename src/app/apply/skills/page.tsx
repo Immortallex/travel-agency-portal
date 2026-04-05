@@ -16,7 +16,7 @@ export default function OtherSkillsForm() {
         {/* --- PROFESSIONAL HEADER IMAGE --- */}
         <div className="relative h-64 w-full">
           <Image 
-            src="/images/other-skills.jpeg" 
+            src="/images/other-skills.jpg" 
             alt="Other Skills Relocation" 
             fill 
             className="object-cover brightness-50"
