@@ -32,7 +32,7 @@ export async function sendConfirmationEmail(userEmail: string, uniqueId: string)
     doc.text("Your Next Steps:", 20, 100);
     doc.setFontSize(12);
     doc.text("1. Verification: Our team is reviewing your documents (Passport/CV).", 20, 115);
-    doc.text("2. Tracking: Visit ://flypathtravels.com to check your status.", 20, 125);
+    doc.text("2. Tracking: Visit https://flypathtravels.com to check your status.", 20, 125);
     doc.text("3. Interview: If shortlisted, you will receive a virtual meeting invite.", 20, 135);
     doc.text("4. Legal: Upon approval, we initiate your visa sponsorship process.", 20, 145);
     
@@ -46,14 +46,15 @@ export async function sendConfirmationEmail(userEmail: string, uniqueId: string)
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "flypathserver@gmail.com", // Replace with your real Gmail
-        pass: process.env.EMAIL_SERVER_PASSWORD, // This pulls the 16-character App Password from Vercel
+        user: "flypathserver@gmail.com", // Your Gmail acting as the engine
+        pass: process.env.EMAIL_SERVER_PASSWORD, // Your 16-character Google App Password
       },
     });
 
     // 3. Send the Email
     const mailOptions = {
-      from: '"FlyPath Travels" <flypathserver@gmail.com>',
+      // Changed to use your professional custom domain email
+      from: '"FlyPath Travels" <info@flypathtravels.com>', 
       to: userEmail,
       subject: `Application Successful - ${uniqueId}`,
       text: `Congratulations! Your application has been received. Your unique tracking ID is ${uniqueId}. Please find your receipt attached.`,
