@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import dbConnect from "@/lib/mongodb";
+import dbConnect from "@/lib/db";
 import Application from "@/models/Application";
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {

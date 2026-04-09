@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
-import dbConnect from "@/lib/mongodb";
+import dbConnect from "@/lib/db";
 import Application from "@/models/Application";
 import { generateFlyPathID } from "@/lib/utils";
 
