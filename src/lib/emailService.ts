@@ -14,18 +14,27 @@ const transporter = nodemailer.createTransport({
 /**
  * Sends a welcome email to new users upon successful signup.
  */
+// src/lib/emailService.ts
+// ... (transporter config)
+
 export async function sendWelcomeEmail(userEmail: string, userName: string) {
+  const verificationLink = "https://www.flypathtravels.com/auth"; 
+  
   try {
     await transporter.sendMail({
       from: '"FlyPath Travels" <info@flypathtravels.com>',
       to: userEmail,
-      subject: "Welcome to FlyPath Travels - Account Confirmed",
-      html: `<h1>Welcome, ${userName}!</h1><p>Your account is active. You can now choose your relocation pathway and start your application.</p>`
+      subject: "Verify Your FlyPath Travels Account",
+      html: `
+        <div style="font-family: sans-serif; max-width: 600px; margin: auto;">
+          <h2 style="color: #0A192F;">Welcome to FlyPath, ${userName}!</h2>
+          <p>Please click the button below to verify your account and access your relocation dashboard.</p>
+          <a href="${verificationLink}" style="background: #2563eb; color: white; padding: 12px 25px; text-decoration: none; border-radius: 8px; display: inline-block;">Verify Account</a>
+        </div>
+      `
     });
-    console.log(`✅ Welcome email sent to ${userEmail}`);
   } catch (error) {
-    // Log error but don't crash the signup process
-    console.error("❌ Welcome Email Error:", error);
+    console.error("Email failed:", error);
   }
 }
 
