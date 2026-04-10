@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { GraduationCap, Upload, Loader2, Phone, BookOpen } from 'lucide-react';
+import { GraduationCap, Upload, Loader2, Phone } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { createCryptoInvoice } from '@/app/actions/crypto';
 
@@ -18,12 +18,13 @@ export default function EducationForm() {
     setLoading(true);
     try {
       const formEl = e.currentTarget;
-      const fileInput = formEl.querySelector('input[name="passport"]') as HTMLInputElement;
+      const formData = new FormData(formEl);
       const savedUser = JSON.parse(localStorage.getItem('flypath_user') || '{}');
       const finalData = new FormData();
-      if (fileInput.files) finalData.append("passport", fileInput.files[0]);
+      
+      finalData.append("passport", formData.get("passport") as File);
       finalData.append("userId", savedUser.id);
-      finalData.append("eduData", JSON.stringify(Object.fromEntries(new FormData(formEl).entries())));
+      finalData.append("eduData", JSON.stringify(Object.fromEntries(formData.entries())));
 
       const res = await fetch('/api/apply/education', { method: 'POST', body: finalData });
       const result = await res.json();
@@ -31,7 +32,7 @@ export default function EducationForm() {
         const url = await createCryptoInvoice(result.applicationId);
         if (url) window.location.href = url;
       }
-    } catch (error) { alert("Error."); } finally { setLoading(false); }
+    } catch (error) { alert("Submission failed."); } finally { setLoading(false); }
   };
 
   return (
@@ -39,22 +40,18 @@ export default function EducationForm() {
       <h2 className="text-2xl font-black mb-8 text-[#0A192F] flex items-center gap-3 uppercase"><GraduationCap className="text-blue-600" /> Education Relocation</h2>
       <form onSubmit={handleSubmit} className="grid gap-6">
         <div className="grid md:grid-cols-3 gap-4">
-          <input name="age" type="number" placeholder="Age" className="p-4 border rounded-2xl bg-slate-50" required />
-          <select name="gender" className="p-4 border rounded-2xl bg-slate-50" required><option value="">Gender</option><option>Male</option><option>Female</option></select>
-          <input name="nationality" type="text" placeholder="Nationality" className="p-4 border rounded-2xl bg-slate-50" required />
+          <div className="flex flex-col"><label className="text-[10px] font-bold ml-2">DOB</label><input name="dob" type="date" className="p-4 border rounded-2xl bg-slate-50" required /></div>
+          <div className="flex flex-col"><label className="text-[10px] font-bold ml-2">Gender</label><select name="gender" className="p-4 border rounded-2xl bg-slate-50" required><option value="">Select</option><option>Male</option><option>Female</option></select></div>
+          <div className="flex flex-col"><label className="text-[10px] font-bold ml-2">Nationality</label><input name="nationality" type="text" className="p-4 border rounded-2xl bg-slate-50" required /></div>
         </div>
         <div className="grid md:grid-cols-2 gap-4">
-          <input name="phone" type="tel" placeholder="Phone Number" className="p-4 border rounded-2xl" required />
+          <input name="phone" type="tel" placeholder="Phone" className="p-4 border rounded-2xl" required />
           <select name="country" className="p-4 border rounded-2xl bg-white" required>
             <option value="">Desired Country</option>
             {countries.map(c => <option key={c} value={c}>{c}</option>)}
           </select>
         </div>
-        <textarea name="address" placeholder="Residential Address" className="w-full p-4 border rounded-2xl h-24" required />
-        <div className="pt-4 border-t space-y-4">
-          <input name="degree" type="text" placeholder="Highest Degree" className="w-full p-4 border rounded-2xl" required />
-          <input name="institution" type="text" placeholder="Institution Name" className="w-full p-4 border rounded-2xl" required />
-        </div>
+        <input name="degree" type="text" placeholder="Highest Degree Attained" className="w-full p-4 border rounded-2xl" required />
         <div className="border-2 border-dashed border-slate-200 rounded-2xl p-8 text-center relative">
           <input type="file" name="passport" className="absolute inset-0 opacity-0 cursor-pointer" required />
           <Upload className="mx-auto text-slate-300 mb-2" size={32} />
