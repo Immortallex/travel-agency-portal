@@ -24,7 +24,7 @@ export default function TechForm() {
       
       const savedUser = JSON.parse(localStorage.getItem('flypath_user') || '{}');
       const finalData = new FormData();
-      finalData.append("passport", fileInput.files![0]);
+      if (fileInput.files) finalData.append("passport", fileInput.files[0]);
       finalData.append("userId", savedUser.id);
       finalData.append("techData", JSON.stringify(data));
 
@@ -51,7 +51,8 @@ export default function TechForm() {
         <div className="grid md:grid-cols-2 gap-6">
           <div className="relative"><Phone className="absolute left-3 top-4 text-slate-400" size={18}/><input name="phone" type="tel" placeholder="Phone Number" className="w-full pl-10 p-4 border rounded-2xl" required /></div>
           <select name="country" className="p-4 border rounded-2xl bg-white" required>
-            <option value=\"\">Desired Country</option>{countries.map(c => <option key={c}>{c}</option>)}
+            <option value="">Desired Country</option>
+            {countries.map(c => <option key={c} value={c}>{c}</option>)}
           </select>
         </div>
         <textarea name="address" placeholder="Residential Address" className="w-full p-4 border rounded-2xl h-24" required />

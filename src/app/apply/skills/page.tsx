@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { Briefcase, Phone, Globe, Upload, Loader2, Award, ArrowRight } from 'lucide-react';
+import { Briefcase, Phone, Upload, Loader2, Award, ArrowRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { createCryptoInvoice } from '@/app/actions/crypto';
 
@@ -22,7 +22,7 @@ export default function SkillsForm() {
       const savedUser = JSON.parse(localStorage.getItem('flypath_user') || '{}');
       
       const finalData = new FormData();
-      finalData.append("passport", fileInput.files![0]);
+      if (fileInput.files) finalData.append("passport", fileInput.files[0]);
       finalData.append("userId", savedUser.id);
       finalData.append("skillsData", JSON.stringify(Object.fromEntries(new FormData(formEl).entries())));
 
@@ -44,7 +44,9 @@ export default function SkillsForm() {
       <form onSubmit={handleSubmit} className="grid gap-6">
         <div className="grid md:grid-cols-3 gap-4">
           <input name="age" type="number" placeholder="Age" className="p-4 border rounded-2xl bg-slate-50" required />
-          <select name="gender" className="p-4 border rounded-2xl bg-slate-50" required><option>Male</option><option>Female</option></select>
+          <select name="gender" className="p-4 border rounded-2xl bg-slate-50" required>
+            <option value="">Gender</option><option>Male</option><option>Female</option>
+          </select>
           <input name="nationality" type="text" placeholder="Nationality" className="p-4 border rounded-2xl bg-slate-50" required />
         </div>
 
@@ -52,7 +54,7 @@ export default function SkillsForm() {
           <input name="phone" type="tel" placeholder="Phone Number" className="p-4 border rounded-2xl" required />
           <select name="country" className="p-4 border rounded-2xl bg-white" required>
             <option value="">Desired Country</option>
-            {countries.map(c => <option key={c}>{c}</option>)}
+            {countries.map(c => <option key={c} value={c}>{c}</option>)}
           </select>
         </div>
 

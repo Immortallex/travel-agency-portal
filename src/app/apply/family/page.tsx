@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { Users, Plus, Trash2, Upload, Info, Loader2, Phone } from 'lucide-react';
+import { Users, Plus, Trash2, Upload, Loader2, Phone } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { createCryptoInvoice } from '@/app/actions/crypto';
 
@@ -24,8 +24,9 @@ export default function FamilyForm() {
       const formEl = e.currentTarget;
       const fileInput = formEl.querySelector('input[name="passport"]') as HTMLInputElement;
       const savedUser = JSON.parse(localStorage.getItem('flypath_user') || '{}');
+      
       const finalData = new FormData();
-      finalData.append("passport", fileInput.files![0]);
+      if (fileInput.files) finalData.append("passport", fileInput.files[0]);
       finalData.append("userId", savedUser.id);
       finalData.append("familyData", JSON.stringify({
         ...Object.fromEntries(new FormData(formEl).entries()),
@@ -38,7 +39,11 @@ export default function FamilyForm() {
         const url = await createCryptoInvoice(result.applicationId);
         if (url) window.location.href = url;
       }
-    } catch (error) { alert("Error."); } finally { setLoading(false); }
+    } catch (error) {
+      alert("Error submitting application.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -48,12 +53,17 @@ export default function FamilyForm() {
         <p className="text-sm font-bold text-blue-600 uppercase tracking-widest border-b pb-2">Primary Applicant Details</p>
         <div className="grid md:grid-cols-3 gap-4">
           <input name="age" type="number" placeholder="Age" className="p-4 border rounded-2xl bg-slate-50" required />
-          <select name="gender" className="p-4 border rounded-2xl bg-slate-50" required><option value="">Gender</option><option>Male</option><option>Female</option></select>
+          <select name="gender" className="p-4 border rounded-2xl bg-slate-50" required>
+            <option value="">Gender</option><option>Male</option><option>Female</option>
+          </select>
           <input name="nationality" type="text" placeholder="Nationality" className="p-4 border rounded-2xl bg-slate-50" required />
         </div>
         <div className="grid md:grid-cols-2 gap-4">
           <input name="phone" type="tel" placeholder="Phone Number" className="p-4 border rounded-2xl" required />
-          <select name="country" className="p-4 border rounded-2xl bg-white" required><option value="">Desired Country</option>{countries.map(c => <option key={c}>{c}</option>)}</select>
+          <select name="country" className="p-4 border rounded-2xl bg-white" required>
+            <option value="">Desired Country</option>
+            {countries.map(c => <option key={c} value={c}>{c}</option>)}
+          </select>
         </div>
         <textarea name="address" placeholder="Residential Address" className="w-full p-4 border rounded-2xl h-24" required />
         
@@ -72,7 +82,9 @@ export default function FamilyForm() {
               }} />
               <select className="p-3 border rounded-xl bg-slate-50" onChange={(e) => {
                 const n = [...dependents]; n[index].relation = e.target.value; setDependents(n);
-              }}><option>Relation</option><option>Spouse</option><option>Child</option></select>
+              }}>
+                <option value="">Relation</option><option>Spouse</option><option>Child</option>
+              </select>
               <input placeholder="Age" className="w-20 p-3 border rounded-xl" required onChange={(e) => {
                 const n = [...dependents]; n[index].age = e.target.value; setDependents(n);
               }} />

@@ -21,7 +21,7 @@ export default function ConferenceForm() {
       const savedUser = JSON.parse(localStorage.getItem('flypath_user') || '{}');
       
       const finalData = new FormData();
-      finalData.append("passport", fileInput.files![0]);
+      if (fileInput.files) finalData.append("passport", fileInput.files[0]);
       finalData.append("userId", savedUser.id);
       finalData.append("confData", JSON.stringify(Object.fromEntries(new FormData(formEl).entries())));
 
@@ -43,7 +43,9 @@ export default function ConferenceForm() {
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid md:grid-cols-3 gap-4">
           <input name="age" type="number" placeholder="Age" className="p-4 border rounded-2xl bg-slate-50" required />
-          <select name="gender" className="p-4 border rounded-2xl bg-slate-50" required><option>Male</option><option>Female</option></select>
+          <select name="gender" className="p-4 border rounded-2xl bg-slate-50" required>
+            <option value="">Gender</option><option>Male</option><option>Female</option>
+          </select>
           <input name="nationality" type="text" placeholder="Nationality" className="p-4 border rounded-2xl bg-slate-50" required />
         </div>
         
