@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import connectDB from '@/lib/mongodb';
+import connectDB from '@/lib/db';
 import Application from '@/models/Application';
 import { uploadToS3 } from '@/lib/s3';
 
