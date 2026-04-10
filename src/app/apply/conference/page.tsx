@@ -1,12 +1,17 @@
 "use client";
-import React, { useState } from 'react';
-import { Mic2, Upload, Loader2, ArrowRight, Calendar } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Mic2, Upload, Loader2, ArrowRight, Link as LinkIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { createCryptoInvoice } from '@/app/actions/crypto';
 
 export default function ConferenceForm() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    const user = localStorage.getItem('flypath_user');
+    if (!user) router.push('/auth');
+  }, [router]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -16,7 +21,7 @@ export default function ConferenceForm() {
       const user = JSON.parse(localStorage.getItem('flypath_user') || '{}');
       const finalData = new FormData();
       finalData.append("passport", formData.get("passport") as File);
-      finalData.append("userId", user.id);
+      finalData.append("userId", user.id || user._id);
       
       const details = Object.fromEntries(formData.entries());
       details.category = "Conference";
@@ -36,20 +41,18 @@ export default function ConferenceForm() {
       <h2 className="text-3xl font-black mb-8 flex items-center gap-3 uppercase text-[#0A192F]"><Mic2 className="text-blue-600"/> Conference Relocation</h2>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid md:grid-cols-2 gap-6">
-          <div className="flex flex-col"><label className="text-xs font-bold mb-1 ml-2">DATE OF BIRTH</label><input name="dob" type="date" className="p-4 border rounded-2xl bg-slate-50" required /></div>
-          <div className="flex flex-col"><label className="text-xs font-bold mb-1 ml-2">GENDER</label><select name="gender" className="p-4 border rounded-2xl bg-slate-50" required><option value="">Select</option><option>Male</option><option>Female</option></select></div>
+          <div className="flex flex-col"><label className="text-xs font-bold mb-1 ml-2 text-slate-400">DATE OF BIRTH</label><input name="dob" type="date" className="p-4 border rounded-2xl bg-slate-50" required /></div>
+          <div className="flex flex-col"><label className="text-xs font-bold mb-1 ml-2 text-slate-400">GENDER</label><select name="gender" className="p-4 border rounded-2xl bg-slate-50" required><option value="">Select</option><option>Male</option><option>Female</option></select></div>
         </div>
         <div className="grid md:grid-cols-2 gap-6">
-          <input name="conferenceName" placeholder="Name of Conference" className="p-4 border rounded-2xl" required />
-          <select name="country" className="p-4 border rounded-2xl" required>
+          <input name="conferenceName" placeholder="Name of Conference" className="p-4 border rounded-2xl bg-slate-50" required />
+          <select name="country" className="p-4 border rounded-2xl bg-slate-50" required>
             <option value="">Conference Location</option>
             <option>USA</option><option>United Kingdom</option><option>Canada</option><option>Germany</option><option>UAE</option><option>Others</option>
           </select>
         </div>
-        <div className="grid md:grid-cols-2 gap-6">
-          <div className="flex flex-col"><label className="text-xs font-bold mb-1 ml-2">START DATE</label><input name="startDate" type="date" className="p-4 border rounded-2xl bg-slate-50" required /></div>
-          <input name="role" placeholder="Your Role (e.g. Speaker, Attendee)" className="p-4 border rounded-2xl mt-5" required />
-        </div>
+        <input name="invitationLink" placeholder="Link to Conference Website or Invitation" className="w-full p-4 border rounded-2xl bg-slate-50" required />
+        <textarea name="roleDescription" placeholder="Describe your role or reason for attending" className="w-full p-4 border rounded-2xl h-24 bg-slate-50" required />
         <div className="border-2 border-dashed border-slate-200 rounded-2xl p-8 text-center relative">
           <input type="file" name="passport" className="absolute inset-0 opacity-0 cursor-pointer" required />
           <Upload className="mx-auto text-slate-300 mb-2" />

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Users, Upload, Loader2, ArrowRight, Plus, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { createCryptoInvoice } from '@/app/actions/crypto';
@@ -8,6 +8,10 @@ export default function FamilyForm() {
   const [loading, setLoading] = useState(false);
   const [dependents, setDependents] = useState([{ name: '', dob: '', relation: '' }]);
   const router = useRouter();
+
+  useEffect(() => {
+    if (!localStorage.getItem('flypath_user')) router.push('/auth');
+  }, [router]);
 
   const addMember = () => setDependents([...dependents, { name: '', dob: '', relation: '' }]);
 
@@ -19,7 +23,7 @@ export default function FamilyForm() {
       const user = JSON.parse(localStorage.getItem('flypath_user') || '{}');
       const finalData = new FormData();
       finalData.append("passport", formData.get("passport") as File);
-      finalData.append("userId", user.id);
+      finalData.append("userId", user.id || user._id);
       
       const details = Object.fromEntries(formData.entries());
       details.category = "Family";
@@ -40,7 +44,7 @@ export default function FamilyForm() {
       <h2 className="text-3xl font-black mb-8 flex items-center gap-3 uppercase text-[#0A192F]"><Users className="text-blue-600"/> Family Relocation</h2>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid md:grid-cols-3 gap-4">
-           <div className="flex flex-col"><label className="text-[10px] font-bold ml-2">MY DOB</label><input name="dob" type="date" className="p-4 border rounded-2xl bg-slate-50" required /></div>
+           <div className="flex flex-col"><label className="text-[10px] font-bold ml-2 text-slate-400">MY DOB</label><input name="dob" type="date" className="p-4 border rounded-2xl bg-slate-50" required /></div>
            <select name="maritalStatus" className="p-4 border rounded-2xl bg-slate-50 mt-4" required>
             <option value="">Marital Status</option><option>Married</option><option>Single Parent</option>
           </select>
@@ -65,6 +69,8 @@ export default function FamilyForm() {
           ))}
           <button type="button" onClick={addMember} className="flex items-center gap-2 text-blue-600 font-bold text-sm hover:underline"><Plus size={16}/> Add Family Member</button>
         </div>
+
+        <input name="documentsLink" placeholder="Link to Birth/Marriage Certificates (Drive/Dropbox)" className="w-full p-4 border rounded-2xl bg-slate-50" required />
 
         <div className="border-2 border-dashed border-slate-200 rounded-2xl p-8 text-center relative">
           <input type="file" name="passport" className="absolute inset-0 opacity-0 cursor-pointer" required />
