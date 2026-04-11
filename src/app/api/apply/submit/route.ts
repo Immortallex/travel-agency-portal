@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import connectDB from '@/lib/db'; // Ensuring consistency with your preferred db.ts
+import connectDB from '@/lib/db';
 import Application from '@/models/Application';
 import { uploadToS3 } from '@/lib/s3';
 
@@ -9,46 +9,36 @@ export async function POST(req: Request) {
     const formData = await req.formData();
     
     const passportFile = formData.get("passport") as File;
-    const cvFile = formData.get("cv") as File; // Check if CV exists
-    const userId = formData.get("userId");
-    const applicationData = JSON.parse(formData.get("formData") as string);
+    const cvFile = formData.get("cv") as File;
+    const userId = formData.get("userId") as string;
+    const details = JSON.parse(formData.get("formData") as string);
 
-    if (!userId || userId === "undefined") {
-      return NextResponse.json({ error: "Auth session expired. Please re-login." }, { status: 401 });
-    }
-
-    // 1. Upload Passport
+    // 1. Upload Files to S3
     const passportUrl = await uploadToS3(passportFile);
+    const cvUrl = await uploadToS3(cvFile);
 
-    // 2. Upload CV (if provided, otherwise use a placeholder to satisfy schema)
-    let cvUrl = "no-cv-provided";
-    if (cvFile && cvFile.size > 0) {
-      cvUrl = await uploadToS3(cvFile);
-    }
+    // 2. Generate Application IDs
+    const uniqueId = `FP-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
-    // 3. Generate the required uniqueId mentioned in your error log
-    const generatedUniqueId = `FP-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
-
-    // 4. Save to MongoDB
+    // 3. Create Document (Matches Schema Exactly)
     const newApp = await Application.create({
       userId,
-      uniqueId: generatedUniqueId, // Fixed missing required field
-      cvUrl: cvUrl,                // Fixed missing required field
+      category: details.category || 'Tech',
+      uniqueId: uniqueId,
+      status: 'Pending',
+      paymentStatus: 'Unpaid',
+      details: details,
       passportUrl: passportUrl,
-      category: applicationData.category || 'General',
-      status: 'pending_payment',
-      details: applicationData,
-      applicationId: `APP-${Math.floor(1000 + Math.random() * 9000)}`
+      cvUrl: cvUrl
     });
 
     return NextResponse.json({ 
       success: true, 
-      applicationId: newApp.applicationId,
-      mongoId: newApp._id 
+      applicationId: uniqueId 
     });
 
   } catch (error: any) {
     console.error("SUBMIT_ERROR:", error);
-    return NextResponse.json({ error: error.message || "Server Error" }, { status: 500 });
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
