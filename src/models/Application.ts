@@ -5,7 +5,7 @@ const ApplicationSchema = new mongoose.Schema({
   userId: { type: String, required: true },
   category: { 
     type: String, 
-    enum: ['Education', 'Tech', 'Sports', 'Conference', 'Family', 'Other', 'Skills'], 
+    enum: ['Education', 'Tech', 'Sports', 'Conference', 'Family', 'Skills'], 
     required: true 
   },
   uniqueId: { type: String, required: true, unique: true }, 
