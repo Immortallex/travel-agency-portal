@@ -1,20 +1,21 @@
 import mongoose from 'mongoose';
 
 const ApplicationSchema = new mongoose.Schema({
+  // Using String to accommodate different ID formats from localStorage
   userId: { type: String, required: true },
   category: { 
     type: String, 
-    enum: ['Education', 'Tech', 'Sports', 'Conference', 'Family', 'Other', 'Humanitarian'], 
+    enum: ['Education', 'Tech', 'Sports', 'Conference', 'Family', 'Other', 'Skills'], 
     required: true 
   },
   uniqueId: { type: String, required: true, unique: true }, 
   status: { type: String, default: 'Pending' },
   paymentStatus: { type: String, default: 'Unpaid' },
   
-  // This stores all the specific form data (years of exp, tech stack, etc.)
+  // This object captures all unique fields from various forms
   details: { type: Object, required: true },
 
-  // Files are REQUIRED in your schema
+  // S3 URLs for required documents
   passportUrl: { type: String, required: true },
   cvUrl: { type: String, required: true },
   
