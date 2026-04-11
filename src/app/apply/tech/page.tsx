@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Code, Upload, Loader2, ArrowRight } from 'lucide-react';
+import { Code, Upload, Loader2, ArrowRight, FileText } from 'lucide-react';
 import { createCryptoInvoice } from '@/app/actions/crypto';
 import Navbar from '@/components/Navbar';
 
@@ -28,23 +28,37 @@ export default function TechForm() {
         return router.push('/auth');
       }
 
-      const formData = new FormData(e.currentTarget);
+      const formElement = e.currentTarget;
+      const formData = new FormData(formElement);
       const finalData = new FormData();
+      
+      // Extract files exactly as named in input 'name' attributes
       finalData.append("passport", formData.get("passport") as File);
+      finalData.append("cv", formData.get("cv") as File); 
       finalData.append("userId", userId);
       
       const details = Object.fromEntries(formData.entries());
+      // Remove files from the details object to keep the JSON clean
+      delete details.passport;
+      delete details.cv;
+      
       details.category = "Tech";
       finalData.append("formData", JSON.stringify(details));
 
       const res = await fetch('/api/apply/submit', { method: 'POST', body: finalData });
-      const result = await res.json();
       
-      if (res.ok) {
-        const url = await createCryptoInvoice(result.applicationId);
-        if (url) window.location.href = url;
+      // Safety check for non-JSON responses (HTML errors)
+      const contentType = res.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        const result = await res.json();
+        if (res.ok) {
+          const url = await createCryptoInvoice(result.applicationId);
+          if (url) window.location.href = url;
+        } else {
+          alert(result.error || "Submission failed");
+        }
       } else {
-        alert(result.error || "Submission failed");
+        alert("Server Error: Please check your environment variables and redeploy.");
       }
     } catch (err) {
       alert("An error occurred. Check your connection.");
@@ -75,10 +89,19 @@ export default function TechForm() {
             <input name="experience" placeholder="Years of Experience" type="number" className="w-full p-4 border rounded-2xl bg-slate-50" required />
             <textarea name="projects" placeholder="List your top 3 most significant technical projects..." className="w-full p-4 border rounded-2xl h-32 bg-slate-50" required />
             
-            <div className="border-2 border-dashed border-slate-200 rounded-2xl p-8 text-center relative hover:bg-slate-50 transition">
-              <input type="file" name="passport" className="absolute inset-0 opacity-0 cursor-pointer" required />
-              <Upload className="mx-auto text-slate-300 mb-2" />
-              <p className="text-sm font-bold text-slate-500 uppercase">Upload International Passport</p>
+            {/* FILE UPLOAD GRID */}
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="border-2 border-dashed border-slate-200 rounded-2xl p-6 text-center relative hover:bg-slate-50 transition">
+                <input type="file" name="passport" className="absolute inset-0 opacity-0 cursor-pointer" required />
+                <Upload className="mx-auto text-slate-300 mb-2" />
+                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Passport Data Page</p>
+              </div>
+
+              <div className="border-2 border-dashed border-slate-200 rounded-2xl p-6 text-center relative hover:bg-slate-50 transition">
+                <input type="file" name="cv" className="absolute inset-0 opacity-0 cursor-pointer" required />
+                <FileText className="mx-auto text-slate-300 mb-2" />
+                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Upload Professional CV</p>
+              </div>
             </div>
             
             <button type="submit" disabled={loading} className="w-full bg-[#0A192F] text-white py-5 rounded-2xl font-bold text-xl flex justify-center items-center gap-2 shadow-lg hover:bg-blue-900 transition-all">
