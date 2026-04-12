@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { GraduationCap, Upload, Loader2, CheckCircle2 } from 'lucide-react';
+import { GraduationCap, Upload, Loader2, CheckCircle2, ArrowRight } from 'lucide-react';
 import { createCryptoInvoice } from '@/app/actions/crypto';
 import Navbar from '@/components/Navbar';
 
@@ -31,36 +31,43 @@ export default function EducationForm() {
       delete details.passport;
       details.category = "Education";
       finalData.append("formData", JSON.stringify(details));
-
       const res = await fetch('/api/apply/submit', { method: 'POST', body: finalData });
       const result = await res.json();
-      if (!res.ok) throw new Error(result.error || "Database rejected save");
-
+      if (!res.ok) throw new Error(result.error);
       const url = await createCryptoInvoice(result.applicationId);
       if (url) window.location.href = url;
     } catch (err: any) { alert(err.message); } finally { setLoading(false); }
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white pb-20">
       <Navbar />
-      <div className="max-w-2xl mx-auto pt-24 px-6">
-        <div className="p-8 border rounded-[2.5rem] shadow-sm">
-          <h2 className="text-2xl font-bold mb-6 flex items-center gap-2 uppercase text-slate-800"><GraduationCap size={24}/> Academic Pathway</h2>
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <div className="grid grid-cols-2 gap-4">
-              <input name="dob" type="date" className="p-4 border rounded-xl bg-slate-50 text-sm" required />
-              <input name="degree" placeholder="Highest Degree Obtained" className="p-4 border rounded-xl bg-slate-50 text-sm" required />
+      <div className="max-w-4xl mx-auto pt-32 px-6">
+        <div className="bg-white p-10 border rounded-[3rem] shadow-xl">
+          <h2 className="text-3xl font-black flex items-center gap-3 uppercase text-[#0A192F] mb-8">
+            <GraduationCap className="text-blue-600"/> Academic Relocation
+          </h2>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid md:grid-cols-2 gap-6">
+              <input name="fullName" placeholder="Full Name" className="p-4 border rounded-2xl bg-slate-50" required />
+              <input name="dob" type="date" className="p-4 border rounded-2xl bg-slate-50" required />
             </div>
-            <input name="desiredCourse" placeholder="Desired Course of Study" className="w-full p-4 border rounded-xl bg-slate-50 text-sm" required />
-            <textarea name="goals" placeholder="Briefly describe your academic and career goals..." className="w-full p-4 border rounded-xl bg-slate-50 text-sm h-32" required />
-            <div className="border-2 border-dashed border-slate-200 rounded-xl p-6 text-center relative hover:border-blue-400 transition-colors">
+            <div className="grid md:grid-cols-2 gap-6">
+              <input name="highestQualification" placeholder="Highest Qualification (e.g. BSc, MSc)" className="p-4 border rounded-2xl bg-slate-50" required />
+              <input name="intendedCourse" placeholder="Intended Course of Study" className="p-4 border rounded-2xl bg-slate-50" required />
+            </div>
+            <div className="grid md:grid-cols-2 gap-6">
+              <input name="currentGPA" placeholder="Current GPA / Class of Degree" className="p-4 border rounded-2xl bg-slate-50" required />
+              <input name="destinationCountry" placeholder="Target Destination (e.g. USA, Canada, UK)" className="p-4 border rounded-2xl bg-slate-50" required />
+            </div>
+            <textarea name="academicGoals" placeholder="Describe your academic goals and how this relocation helps your future career..." className="w-full p-4 border rounded-2xl h-32 bg-slate-50" required />
+            <div className="border-2 border-dashed border-slate-200 rounded-2xl p-8 text-center relative hover:bg-slate-50">
               <input type="file" name="passport" onChange={handleFileChange} className="absolute inset-0 opacity-0 cursor-pointer" required />
-              {fileName ? <CheckCircle2 className="mx-auto text-green-500 mb-1" /> : <Upload className="mx-auto text-slate-300 mb-1" />}
-              <p className="text-xs font-bold text-slate-500 uppercase">{fileName || "Upload Student Passport"}</p>
+              {fileName ? <CheckCircle2 className="mx-auto text-green-500 mb-2" /> : <Upload className="mx-auto text-slate-300 mb-2" />}
+              <p className="text-sm font-bold text-slate-500 uppercase">{fileName || "Upload Student Passport"}</p>
             </div>
-            <button type="submit" disabled={loading} className="w-full bg-black text-white py-4 rounded-xl font-bold flex justify-center items-center gap-2 uppercase">
-              {loading ? <Loader2 className="animate-spin" /> : "Submit Application ($69.99)"}
+            <button type="submit" disabled={loading} className="w-full bg-[#0A192F] text-white py-5 rounded-2xl font-black text-xl flex justify-center items-center gap-2">
+              {loading ? <Loader2 className="animate-spin" /> : "Proceed to Payment ($69.99)"} <ArrowRight />
             </button>
           </form>
         </div>

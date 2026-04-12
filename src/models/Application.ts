@@ -6,12 +6,12 @@ const ApplicationSchema = new mongoose.Schema({
   uniqueId: { type: String, required: true, unique: true },
   status: { type: String, default: 'Pending' },
   paymentStatus: { type: String, default: 'Unpaid' },
-  details: { type: mongoose.Schema.Types.Mixed, required: true },
+  details: { type: mongoose.Schema.Types.Mixed, required: true }, // Stores all form questions
   passportUrl: { type: String, required: true },
-  cvUrl: { type: String, default: "" },
+  cvUrl: { type: String, default: "" }, 
   submittedAt: { type: Date, default: Date.now },
 }, { 
-  strict: false, 
+  strict: false, // Core fix: accepts all questions/fields
   timestamps: true 
 });
 
