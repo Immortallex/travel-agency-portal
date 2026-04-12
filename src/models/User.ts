@@ -8,7 +8,9 @@ const UserSchema = new mongoose.Schema({
   email: { 
     type: String, 
     required: [true, "Please provide an email"], 
-    unique: true 
+    unique: true,
+    lowercase: true, // Force lowercase to prevent login issues
+    trim: true
   },
   password: { 
     type: String, 
@@ -18,6 +20,9 @@ const UserSchema = new mongoose.Schema({
     type: Date, 
     default: Date.now 
   },
+}, { 
+  timestamps: true // Automatically adds updatedAt and createdAt
 });
 
+// Important for Next.js: Check if the model exists before creating a new one
 export default mongoose.models.User || mongoose.model('User', UserSchema);

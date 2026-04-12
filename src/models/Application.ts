@@ -1,28 +1,29 @@
 import mongoose from 'mongoose';
 
 const ApplicationSchema = new mongoose.Schema({
-  // Force userId to String to handle IDs coming from localStorage without casting errors
+  // Use String instead of ObjectId to prevent casting errors from localStorage IDs
   userId: { type: String, required: true },
   
   category: { 
     type: String, 
-    enum: ['Education', 'Tech', 'Sports', 'Conference', 'Family', 'Other', 'Skills'], 
     required: true 
   },
   
-  uniqueId: { type: String, required: true, unique: true }, // The FP-2026-XXXX-XXXX code
+  uniqueId: { type: String, required: true, unique: true },
   status: { type: String, default: 'Pending' },
   paymentStatus: { type: String, default: 'Unpaid' },
   
-  // details stores all form-specific inputs (dob, gender, stack, etc.)
-  details: { type: Object, required: true },
+  // Accept any object structure for form details
+  details: { type: mongoose.Schema.Types.Mixed, required: true },
 
-  // Files: Passport remains required, CV is now OPTIONAL to prevent crashes
+  // File URLs: Only Passport is strictly required to force the save
   passportUrl: { type: String, required: true },
-  cvUrl: { type: String, required: false, default: "" },
+  cvUrl: { type: String, default: "" }, 
   
   submittedAt: { type: Date, default: Date.now },
+}, { 
+  strict: false, // FORCE FIX: Allows saving fields even if not defined above
+  timestamps: true 
 });
 
-// Use existing model if available to prevent re-compilation errors in Next.js
 export default mongoose.models.Application || mongoose.model('Application', ApplicationSchema);
