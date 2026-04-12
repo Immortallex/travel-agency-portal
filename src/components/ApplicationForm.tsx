@@ -1,63 +1,39 @@
-"use client";
-import React, { useState } from 'react';
+{/* 1. MANDATORY DATE OF BIRTH (Visible for all) */}
+<div>
+  <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Date of Birth</label>
+  <input name="dateOfBirth" type="date" required className="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all outline-none" />
+</div>
 
-const COUNTRIES = ["United States", "United Kingdom", "Canada", "Germany", "Australia", "France", "Nigeria", "Kenya", "Ghana", "South Africa", "Japan", "China"]; // Add full list as needed
+{/* 2. CONSISTENT COUNTRY DROPDOWNS */}
+<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <div>
+    <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Current Residence</label>
+    <select name="residenceCountry" required className="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none">
+      <option value="">Select Country</option>
+      {/* Include your full country list here */}
+    </select>
+  </div>
+  <div>
+    <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Target Destination</label>
+    <select name="destinationCountry" required className="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none">
+      <option value="">Select Destination</option>
+      {["Canada", "United Kingdom", "United States", "Australia", "Germany"].map(c => <option key={c} value={c}>{c}</option>)}
+    </select>
+  </div>
+</div>
 
-export default function ApplicationForm({ segment, additionalFields }: { segment: string, additionalFields: React.ReactNode }) {
-  const [formData, setFormData] = useState({
-    tel: '',
-    currentAddress: '',
-    residenceCountry: '',
-    destinationCountry: '',
-    dateOfBirth: '',
-  });
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    // Logic to call your API route
-    const response = await fetch('/api/apply', {
-      method: 'POST',
-      body: JSON.stringify({ ...formData, segment }),
-    });
-    const result = await response.json();
-    if (!response.ok) alert(result.message);
-  };
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4 p-6">
-      <h2 className="text-2xl font-bold capitalize">{segment} Application</h2>
-      
-      {/* Common Fields */}
-      <input type="tel" placeholder="Phone Number" required className="w-full p-2 border" 
-        onChange={(e) => setFormData({...formData, tel: e.target.value})} />
-      
-      <input type="text" placeholder="Current Address" required className="w-full p-2 border"
-        onChange={(e) => setFormData({...formData, currentAddress: e.target.value})} />
-      
-      <select required className="w-full p-2 border"
-        onChange={(e) => setFormData({...formData, residenceCountry: e.target.value})}>
-        <option value="">Country of Residence</option>
-        {COUNTRIES.map(c => <option key={c} value={c}>{c}</option>)}
-      </select>
-
-      <select required className="w-full p-2 border"
-        onChange={(e) => setFormData({...formData, destinationCountry: e.target.value})}>
-        <option value="">Destination Country</option>
-        {["Canada", "USA", "UK", "Australia", "Poland"].map(c => <option key={c} value={c}>{c}</option>)}
-      </select>
-
-      <div className="flex flex-col">
-        <label className="text-sm">Date of Birth</label>
-        <input type="date" required className="w-full p-2 border"
-          onChange={(e) => setFormData({...formData, dateOfBirth: e.target.value})} />
-      </div>
-
-      {/* Segment Specific Fields */}
-      <div className="pt-4 border-t">
-        {additionalFields}
-      </div>
-
-      <button type="submit" className="bg-blue-600 text-white p-3 rounded">Proceed to Payment</button>
-    </form>
-  );
-}
+{/* 3. TECH-SPECIFIC UPLOAD (Only for /apply/tech) */}
+{segment === 'tech' && (
+  <div className="mt-8 pt-8 border-t border-slate-100">
+    <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Professional CV / Portfolio (PDF)</label>
+    <div className="relative group">
+      <input type="file" name="portfolioFile" accept=".pdf" className="hidden" id="file-upload" />
+      <label htmlFor="file-upload" className="flex flex-col items-center justify-center p-8 border-2 border-dashed border-slate-200 rounded-[2rem] hover:border-blue-500 hover:bg-blue-50/30 cursor-pointer transition-all">
+        <div className="p-4 bg-blue-100 rounded-2xl text-blue-600 mb-3 group-hover:scale-110 transition-transform">
+          <PlusCircle size={24} />
+        </div>
+        <p className="text-xs font-bold text-slate-600 uppercase tracking-widest">Click to upload document</p>
+      </label>
+    </div>
+  </div>
+)}
