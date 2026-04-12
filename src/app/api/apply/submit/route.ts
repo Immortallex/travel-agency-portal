@@ -1,40 +1,50 @@
-import { NextResponse } from 'next/server';
-import connectDB from '@/lib/db';
-import Application from '@/models/Application';
-import { uploadToS3 } from '@/lib/s3';
+import { NextRequest, NextResponse } from "next/server";
+import { uploadToS3 } from "@/lib/s3"; // Or your Cloudinary/Upload logic
+import Application from "@/models/Application";
+import dbConnect from "@/lib/dbConnect";
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
-    await connectDB();
-    const formData = await req.formData();
+    await dbConnect();
+    const data = await req.formData();
     
-    const passportFile = formData.get("passport") as File;
-    const cvFile = formData.get("cv") as File;
-    const userId = formData.get("userId") as string;
-    const details = JSON.parse(formData.get("formData") as string);
+    const passportFile = data.get("passport") as File | null;
+    const cvFile = data.get("cv") as File | null; // This might be null now
+    const userId = data.get("userId");
+    const details = JSON.parse(data.get("formData") as string);
 
-    // 1. Upload Files to S3
-    const passportUrl = await uploadToS3(passportFile);
-    const cvUrl = await uploadToS3(cvFile);
+    if (!passportFile || !userId) {
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
 
-    // 2. Generate Application IDs
-    const uniqueId = `FP-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+    // Process Passport (Required)
+    const passportBuffer = Buffer.from(await passportFile.arrayBuffer());
+    const passportUrl = await uploadToS3(passportBuffer, passportFile.name);
 
-    // 3. Create Document (Matches Schema Exactly)
-    const newApp = await Application.create({
+    // FIX: Process CV ONLY if it exists
+    let cvUrl = "";
+    if (cvFile && cvFile.size > 0) {
+      const cvBuffer = Buffer.from(await cvFile.arrayBuffer());
+      cvUrl = await uploadToS3(cvBuffer, cvFile.name);
+    }
+
+    // Generate unique ID
+    const uniqueId = `FP-${new Date().getFullYear()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+
+    const newApplication = await Application.create({
       userId,
-      category: details.category || 'Tech',
-      uniqueId: uniqueId,
+      category: details.category,
+      uniqueId,
+      details,
+      passportUrl,
+      cvUrl: cvUrl || "Not Provided", // Send empty string or default if null
       status: 'Pending',
-      paymentStatus: 'Unpaid',
-      details: details,
-      passportUrl: passportUrl,
-      cvUrl: cvUrl
+      paymentStatus: 'Unpaid'
     });
 
     return NextResponse.json({ 
       success: true, 
-      applicationId: uniqueId 
+      applicationId: newApplication._id 
     });
 
   } catch (error: any) {
