@@ -1,54 +1,43 @@
 import { NextRequest, NextResponse } from "next/server";
-import { uploadToS3 } from "@/lib/s3"; // Or your Cloudinary/Upload logic
+import { uploadToS3 } from "@/lib/s3";
 import Application from "@/models/Application";
-import dbConnect from "@/lib/db";
+import db from "@/lib/db";
 
 export async function POST(req: NextRequest) {
   try {
-    await dbConnect();
+    await db();
     const data = await req.formData();
-    
     const passportFile = data.get("passport") as File | null;
-    const cvFile = data.get("cv") as File | null; // This might be null now
     const userId = data.get("userId");
-    const details = JSON.parse(data.get("formData") as string);
+    const detailsRaw = data.get("formData");
 
-    if (!passportFile || !userId) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    if (!passportFile || !userId || !detailsRaw) {
+      return NextResponse.json({ error: "Required data missing" }, { status: 400 });
     }
 
-    // Process Passport (Required)
-    const passportBuffer = Buffer.from(await passportFile.arrayBuffer());
-    const passportUrl = await uploadToS3(passportBuffer, passportFile.name);
+    const details = JSON.parse(detailsRaw as string);
 
-    // FIX: Process CV ONLY if it exists
-    let cvUrl = "";
-    if (cvFile && cvFile.size > 0) {
-      const cvBuffer = Buffer.from(await cvFile.arrayBuffer());
-      cvUrl = await uploadToS3(cvBuffer, cvFile.name);
+    // Securely process the file
+    let passportUrl = "";
+    if (passportFile && typeof passportFile.arrayBuffer === 'function') {
+      const buffer = Buffer.from(await passportFile.arrayBuffer());
+      passportUrl = await uploadToS3(buffer, passportFile.name);
     }
 
-    // Generate unique ID
-    const uniqueId = `FP-${new Date().getFullYear()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+    const uniqueId = `FP-${new Date().getFullYear()}-${Math.random().toString(36).substring(7).toUpperCase()}`;
 
-    const newApplication = await Application.create({
+    const newApp = await Application.create({
       userId,
       category: details.category,
       uniqueId,
       details,
       passportUrl,
-      cvUrl: cvUrl || "Not Provided", // Send empty string or default if null
-      status: 'Pending',
-      paymentStatus: 'Unpaid'
+      cvUrl: "", // Now strictly optional
     });
 
-    return NextResponse.json({ 
-      success: true, 
-      applicationId: newApplication._id 
-    });
-
+    return NextResponse.json({ success: true, applicationId: newApp._id });
   } catch (error: any) {
     console.error("SUBMIT_ERROR:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Database save failed. Ensure Application.ts is updated." }, { status: 500 });
   }
 }

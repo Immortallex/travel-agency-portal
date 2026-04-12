@@ -1,34 +1,30 @@
-// src/app/api/auth/login/route.ts
-import { NextResponse } from 'next/server';
-import bcrypt from 'bcryptjs';
-import dbConnect from '@/lib/db'; //
-import User from '@/models/User';
+import db from "@/lib/db";
+import User from "@/models/User";
+import bcrypt from "bcryptjs";
+import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-    await dbConnect(); //
-    const { email, password } = await req.json(); //
+    await db();
+    const { email, password } = await req.json();
 
-    // Find the user
-    const user = await User.findOne({ email: email.toLowerCase() }); //
-    if (!user) {
-      return NextResponse.json({ error: "Invalid email or password." }, { status: 401 });
+    // 1. Find user (lowercase email for safety)
+    const user = await User.findOne({ email: email.toLowerCase() });
+
+    // 2. Force Check for Credentials
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      return NextResponse.json(
+        { error: "Incorrect credentials. Please check your email and password." }, 
+        { status: 401 }
+      );
     }
 
-    // Check password
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      return NextResponse.json({ error: "Invalid email or password." }, { status: 401 });
-    }
-
-    // Return user data (excluding password) to persist the session
-    return NextResponse.json({
-      success: true,
-      user: { id: user._id, name: user.fullName, email: user.email }
-    }, { status: 200 });
+    // 3. Success
+    return NextResponse.json({ 
+      user: { id: user._id, fullName: user.fullName, email: user.email } 
+    });
 
   } catch (error) {
-    console.error("Login Error:", error);
-    return NextResponse.json({ error: "Login failed." }, { status: 500 });
+    return NextResponse.json({ error: "Server Error" }, { status: 500 });
   }
 }
