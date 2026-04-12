@@ -14,8 +14,13 @@ const ApplicationSchema = new mongoose.Schema({
     required: true, 
     enum: ['conference', 'education', 'family', 'skills', 'sports', 'tech'] 
   },
-  // This stores the unique questions for each page (e.g., GitHub for Tech)
-  segmentSpecificData: { type: Map, of: String }, 
+  segmentSpecificData: {
+    githubProfile: String,
+    techStack: String,
+    yearsExperience: String,
+    portfolioUrl: String
+  },
+  isCompleted: { type: Boolean, default: false },
   status: { type: String, default: 'pending' },
   createdAt: { type: Date, default: Date.now },
 });

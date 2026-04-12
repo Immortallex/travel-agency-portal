@@ -12,7 +12,7 @@ export async function createCryptoInvoice(applicationId: string) {
       price_amount: 69.99, 
       price_currency: "usd",
       order_id: applicationId,
-      // Ensure these point to your new .com domain
+      // point to .com domain
       ipn_callback_url: "https://flypathtravels.com", 
       success_url: "https://flypathtravels.com",
       cancel_url: "https://flypathtravels.com",

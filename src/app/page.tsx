@@ -32,20 +32,18 @@ export default function HomePage() {
         </div>
       </section>
 
-{/* Humanitarian Pledge Section */}
-<section className="bg-blue-900 text-white py-12 px-6 text-center">
+<section className="bg-blue-900 text-white py-16 px-6 text-center">
   <div className="max-w-4xl mx-auto">
-    <h2 className="text-3xl font-bold mb-4">Our Humanitarian Pledge</h2>
-    <p className="text-lg opacity-90 leading-relaxed">
-      At FlyPath Travels, we are committed to more than just logistics. 
-      A portion of every application fee is dedicated to supporting 
-      displaced families and educational grants for underprivileged students 
-      globally. Your journey helps build a pathway for others.
+    <h2 className="text-3xl font-bold mb-6">Our Humanitarian Pledge</h2>
+    <p className="text-xl opacity-90 leading-relaxed italic">
+      "At FlyPath Travels, we help the <b>incapacitated individuals seeking relocation and new living,</b> we believe in a world without barriers. A portion of every application 
+      fee is directly funneled into our Global Relief Fund, dedicated to helping displaced families, 
+      and underprivileged students through educational grants, and skilled workers secure a brighter 
+      future with our committed agents."
     </p>
-    <div className="mt-8">
-      <span className="border border-white/30 px-4 py-2 rounded-full text-sm">
-        Verified Impact Partner 2026
-      </span>
+    <div className="mt-8 flex justify-center gap-4">
+      <span className="bg-white/10 px-4 py-2 rounded-full text-sm">Displaced Family Support</span>
+      <span className="bg-white/10 px-4 py-2 rounded-full text-sm">Disability Relocation Aid</span>
     </div>
   </div>
 </section>
