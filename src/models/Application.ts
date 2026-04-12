@@ -1,23 +1,22 @@
 import mongoose from 'mongoose';
 
 const ApplicationSchema = new mongoose.Schema({
-  // Using String to accommodate different ID formats from localStorage
+  // Changed to String to prevent Mongoose casting crashes with localStorage IDs
   userId: { type: String, required: true },
   category: { 
     type: String, 
-    enum: ['Education', 'Tech', 'Sports', 'Conference', 'Family', 'Skills'], 
+    enum: ['Education', 'Tech', 'Sports', 'Conference', 'Family', 'Other', 'Skills'], 
     required: true 
   },
-  uniqueId: { type: String, required: true, unique: true }, 
+  uniqueId: { type: String, required: true, unique: true },
   status: { type: String, default: 'Pending' },
   paymentStatus: { type: String, default: 'Unpaid' },
   
-  // This object captures all unique fields from various forms
   details: { type: Object, required: true },
 
-  // S3 URLs for required documents
+  // CV is NO LONGER REQUIRED to prevent submission crashes
   passportUrl: { type: String, required: true },
-  cvUrl: { type: String, required: true },
+  cvUrl: { type: String, required: false }, 
   
   submittedAt: { type: Date, default: Date.now },
 });
