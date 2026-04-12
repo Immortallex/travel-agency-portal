@@ -1,18 +1,23 @@
 import mongoose from 'mongoose';
 
 const ApplicationSchema = new mongoose.Schema({
-  userId: { type: String, required: true },
-  category: { type: String, required: true },
-  uniqueId: { type: String, required: true, unique: true },
-  status: { type: String, default: 'Pending' },
-  paymentStatus: { type: String, default: 'Unpaid' },
-  details: { type: mongoose.Schema.Types.Mixed, required: true }, // Stores all form questions
-  passportUrl: { type: String, required: true },
-  cvUrl: { type: String, default: "" }, 
-  submittedAt: { type: Date, default: Date.now },
-}, { 
-  strict: false, // Core fix: accepts all questions/fields
-  timestamps: true 
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  fullName: { type: String, required: true },
+  email: { type: String, required: true },
+  tel: { type: String, required: true },
+  dateOfBirth: { type: Date, required: true },
+  currentAddress: { type: String, required: true },
+  residenceCountry: { type: String, required: true },
+  destinationCountry: { type: String, required: true },
+  segment: { 
+    type: String, 
+    required: true, 
+    enum: ['conference', 'education', 'family', 'skills', 'sports', 'tech'] 
+  },
+  // This stores the unique questions for each page (e.g., GitHub for Tech)
+  segmentSpecificData: { type: Map, of: String }, 
+  status: { type: String, default: 'pending' },
+  createdAt: { type: Date, default: Date.now },
 });
 
 export default mongoose.models.Application || mongoose.model('Application', ApplicationSchema);

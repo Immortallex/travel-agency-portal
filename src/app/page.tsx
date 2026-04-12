@@ -27,18 +27,36 @@ export default function HomePage() {
           <h1 className="text-6xl md:text-8xl font-black text-white uppercase italic tracking-tighter">FlyPath <span className="text-blue-500">Global</span></h1>
           <div className="flex justify-center gap-4 mt-10">
             <button onClick={() => router.push('/#pathways')} className="bg-blue-600 text-white px-10 py-5 rounded-2xl font-black uppercase tracking-widest shadow-xl">Start Journey</button>
-            <a href="https://wa.me/YOUR_NUMBER" className="bg-green-600 text-white px-10 py-5 rounded-2xl font-black uppercase tracking-widest shadow-xl flex items-center gap-2"><MessageCircle size={20}/> Support</a>
+            <a href="https://wa.me/+234..." className="bg-green-600 text-white px-10 py-5 rounded-2xl font-black uppercase tracking-widest shadow-xl flex items-center gap-2"><MessageCircle size={20}/> Support</a>
           </div>
         </div>
       </section>
 
+{/* Humanitarian Pledge Section */}
+<section className="bg-blue-900 text-white py-12 px-6 text-center">
+  <div className="max-w-4xl mx-auto">
+    <h2 className="text-3xl font-bold mb-4">Our Humanitarian Pledge</h2>
+    <p className="text-lg opacity-90 leading-relaxed">
+      At FlyPath Travels, we are committed to more than just logistics. 
+      A portion of every application fee is dedicated to supporting 
+      displaced families and educational grants for underprivileged students 
+      globally. Your journey helps build a pathway for others.
+    </p>
+    <div className="mt-8">
+      <span className="border border-white/30 px-4 py-2 rounded-full text-sm">
+        Verified Impact Partner 2026
+      </span>
+    </div>
+  </div>
+</section>
+
       {/* STATS */}
       <section className="bg-slate-50 py-12 border-y border-slate-200">
         <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 px-6">
-          <div className="text-center"><p className="text-4xl font-black text-blue-600 italic">98%</p><p className="text-[10px] font-bold uppercase text-slate-400 tracking-widest">Success Rate</p></div>
-          <div className="text-center"><p className="text-4xl font-black text-blue-600 italic">5k+</p><p className="text-[10px] font-bold uppercase text-slate-400 tracking-widest">Active Users</p></div>
-          <div className="text-center"><p className="text-4xl font-black text-blue-600 italic">12+</p><p className="text-[10px] font-bold uppercase text-slate-400 tracking-widest">Destinations</p></div>
-          <div className="text-center"><p className="text-4xl font-black text-blue-600 italic">24/7</p><p className="text-[10px] font-bold uppercase text-slate-400 tracking-widest">Expert Help</p></div>
+          <div className="text-center"><p className="text-4xl font-black text-blue-600">98%</p><p className="text-[10px] font-bold uppercase text-slate-400 tracking-widest">Success Rate</p></div>
+          <div className="text-center"><p className="text-4xl font-black text-blue-600">5k+</p><p className="text-[10px] font-bold uppercase text-slate-400 tracking-widest">Active Users</p></div>
+          <div className="text-center"><p className="text-4xl font-black text-blue-600">12+</p><p className="text-[10px] font-bold uppercase text-slate-400 tracking-widest">Destinations</p></div>
+          <div className="text-center"><p className="text-4xl font-black text-blue-600">24/7</p><p className="text-[10px] font-bold uppercase text-slate-400 tracking-widest">Expert Help</p></div>
         </div>
       </section>
 
@@ -49,7 +67,7 @@ export default function HomePage() {
             { title: "Tech Relocation", path: "/apply/tech", img: "/images/tech.webp", icon: <Globe /> },
             { title: "Education", path: "/apply/education", img: "/images/education.webp", icon: <GraduationCap /> },
             { title: "Sports Relocation", path: "/apply/sports", img: "/images/sports.webp", icon: <Trophy /> },
-            { title: "Humanitarian", path: "/apply/humanitarian", img: "/images/family.webp", icon: <HeartHandshake /> },
+            { title: "Family", path: "/apply/family", img: "/images/family.webp", icon: <HeartHandshake /> },
             { title: "Other Skills", path: "/apply/skills", img: "/images/other-skills.webp", icon: <Briefcase /> },
             { title: "Conference", path: "/apply/conference", img: "/images/conference.webp", icon: <Mic2 /> }
           ].map((item) => (
