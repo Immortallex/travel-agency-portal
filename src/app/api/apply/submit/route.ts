@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { uploadToS3 } from "@/lib/s3"; // Or your Cloudinary/Upload logic
 import Application from "@/models/Application";
-import dbConnect from "@/lib/dbConnect";
+import dbConnect from "@/lib/db";
 
 export async function POST(req: NextRequest) {
   try {
