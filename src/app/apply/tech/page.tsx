@@ -3,12 +3,8 @@ export const dynamic = 'force-dynamic';
 
 import React, { useState } from 'react';
 import Navbar from '@/components/Navbar';
-// Import the action from your existing crypto.ts file
 import { createCryptoInvoice } from "@/app/actions/crypto"; 
-
-const ALL_COUNTRIES = ["Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Cameroon", "Canada", "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros", "Congo", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia", "Fiji", "Finland", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Korea, North", "Korea, South", "Kosovo", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Macedonia", "Norway", "Oman", "Pakistan", "Palau", "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"];
-
-const DESTINATIONS = ["Canada", "United States", "United Kingdom", "Germany", "Australia", "Poland", "Finland"];
+import { Code, Upload } from 'lucide-react';
 
 export default function TechApplication() {
   const [loading, setLoading] = useState(false);
@@ -17,110 +13,54 @@ export default function TechApplication() {
     e.preventDefault();
     setLoading(true);
     const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData.entries());
-
     try {
-      // 1. Save application data to your API
-      const res = await fetch('/api/apply', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...data, segment: 'tech' }),
-      });
-
+      const res = await fetch('/api/apply', { method: 'POST', body: formData });
       if (res.ok) {
         const result = await res.json();
-        
-        // 2. Call the NOWPayments server action
-        const invoiceUrl = await createCryptoInvoice(result.id || "tech-app"); 
-
-        if (invoiceUrl) {
-          // 3. FORCE REDIRECT to the actual external payment page
-          window.location.href = invoiceUrl;
-        } else {
-          alert("Payment gateway failed to generate an invoice. Check your API key.");
-        }
-      } else {
-        alert("Database save failed. Please check your connection.");
+        const invoiceUrl = await createCryptoInvoice(result.id); 
+        if (invoiceUrl) window.location.href = invoiceUrl;
       }
-    } catch (err) {
-      console.error("Submission Error:", err);
-      alert("An unexpected error occurred.");
-    } finally {
-      // We don't set loading to false here if redirecting to keep the "Processing" state visible
-    }
+    } catch (err) { console.error(err); } finally { setLoading(false); }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
+    <div className="min-h-screen bg-white pb-20 pt-28">
       <Navbar />
-      <div className="max-w-2xl mx-auto pt-10 px-4">
-        <div className="bg-white p-8 rounded-xl shadow-lg">
-          <h1 className="text-3xl font-bold text-blue-900 mb-6 uppercase italic tracking-tighter">Tech Pathway Application</h1>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Common Fields */}
-            <div>
-              <label className="block text-sm font-medium mb-1 uppercase tracking-widest text-slate-500">Full Name</label>
-              <input name="fullName" type="text" required className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none" />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium mb-1 uppercase tracking-widest text-slate-500">Telephone</label>
-                <input name="tel" type="tel" required className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1 uppercase tracking-widest text-slate-500">Date of Birth</label>
-                <input name="dateOfBirth" type="date" required className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none" />
-              </div>
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1 uppercase tracking-widest text-slate-500">Current Address</label>
-              <input name="currentAddress" type="text" required className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none" />
-            </div>
-            
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium mb-1 uppercase tracking-widest text-slate-500">Country of Residence</label>
-                <select name="residenceCountry" required className="w-full p-2 border rounded outline-none">
-                  <option value="">Select Country</option>
-                  {ALL_COUNTRIES.map(c => <option key={c} value={c}>{c}</option>)}
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1 uppercase tracking-widest text-slate-500">Destination Country</label>
-                <select name="destinationCountry" required className="w-full p-2 border rounded outline-none">
-                  <option value="">Select Destination</option>
-                  {DESTINATIONS.map(c => <option key={c} value={c}>{c}</option>)}
-                </select>
-              </div>
+      <div className="max-w-4xl mx-auto px-6">
+        <div className="bg-[#0A192F] p-12 rounded-[3.5rem] shadow-2xl text-white">
+          <h1 className="text-5xl font-black uppercase italic tracking-tighter mb-2">Tech <span className="text-blue-500">Talent</span></h1>
+          <p className="text-slate-400 text-xs font-bold uppercase tracking-[0.3em] mb-12">Relocation for the world's best builders.</p>
+          
+          <form onSubmit={handleSubmit} className="space-y-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <input name="fullName" placeholder="Full Name" required className="w-full p-5 bg-white/5 border border-white/10 rounded-2xl outline-none" />
+              <input name="tel" placeholder="Phone Number" required className="w-full p-5 bg-white/5 border border-white/10 rounded-2xl outline-none" />
+              <input name="dateOfBirth" type="date" required className="w-full p-5 bg-white/5 border border-white/10 rounded-2xl outline-none" />
+              <input name="address" placeholder="Residential Address" required className="w-full p-5 bg-white/5 border border-white/10 rounded-2xl outline-none" />
             </div>
 
-            {/* Tech Specific Fields */}
-            <div className="pt-4 border-t mt-4">
-              <h3 className="font-black uppercase italic mb-3 text-blue-900">Tech Professional Details</h3>
-              <input name="githubProfile" type="url" placeholder="GitHub Profile URL" className="w-full p-2 border rounded mb-3 outline-none focus:ring-2 focus:ring-blue-500" />
-              <input name="techStack" type="text" placeholder="Primary Tech Stack (e.g. Next.js, Python)" className="w-full p-2 border rounded mb-3 outline-none focus:ring-2 focus:ring-blue-500" />
-              <input name="yearsExperience" type="number" placeholder="Years of Experience" className="w-full p-2 border rounded outline-none focus:ring-2 focus:ring-blue-500" />
+            <div className="pt-10 border-t border-white/10 space-y-8">
+              <h3 className="text-xl font-black uppercase italic text-blue-500 tracking-tighter">Stack & Experience</h3>
+              <input name="techStack" placeholder="Primary Tech Stack (e.g. Next.js, Rust, AWS)" required className="w-full p-5 bg-white/5 border border-white/10 rounded-2xl outline-none" />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <input name="github" placeholder="GitHub/Portfolio Link" required className="w-full p-5 bg-white/5 border border-white/10 rounded-2xl outline-none" />
+                <input name="years" type="number" placeholder="Years of Experience" required className="w-full p-5 bg-white/5 border border-white/10 rounded-2xl outline-none" />
+              </div>
+              <textarea name="architecture" placeholder="Describe the most relevant project you have built/partnered to build..." required className="w-full p-5 bg-white/5 border border-white/10 rounded-2xl h-32 outline-none" />
             </div>
 
-            <button 
-              disabled={loading}
-              type="submit" 
-              className="w-full bg-blue-600 text-white py-4 rounded-xl font-black uppercase tracking-widest hover:bg-blue-700 transition shadow-lg shadow-blue-500/20 disabled:bg-slate-400"
-            >
-              {loading ? "Generating Secure Invoice..." : "Proceed to Payment ($69.99)"}
+            <div className="p-8 bg-blue-500/10 border-2 border-dashed border-blue-500/30 rounded-[2.5rem] flex flex-col items-center text-center space-y-4">
+              <Upload className="text-blue-500" />
+              <h4 className="font-black uppercase tracking-widest text-sm">Upload Passport & Resume</h4>
+              <input type="file" name="passport" required className="text-[10px] font-bold uppercase" />
+            </div>
+
+            <button disabled={loading} type="submit" className="w-full bg-blue-600 py-6 rounded-3xl font-black uppercase tracking-[0.2em] shadow-2xl">
+              {loading ? "Processing..." : "Finalize & Pay $69.99"}
             </button>
           </form>
         </div>
       </div>
-      
-      {/* WhatsApp Floating Button */}
-      <a 
-        href="https://wa.me/YOUR_NUMBER" 
-        target="_blank" 
-        className="fixed bottom-10 right-10 bg-[#25D366] p-5 rounded-2xl shadow-2xl hover:scale-110 transition-transform z-50"
-      >
-        <img src="/images/whatsapp-logo.webp" alt="WhatsApp" className="w-8 h-8 invert" />
-      </a>
     </div>
   );
 }
