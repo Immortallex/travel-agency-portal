@@ -16,21 +16,36 @@ export default function FamilyApplication() {
     setLoading(true);
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData.entries());
-    // Attach dependents to data
+    
+    // Attach the dynamic dependents list to the submission data
     const finalData = { ...data, dependentsList: dependents, segment: 'family' };
 
     try {
+      // Step 1: Submit data to the backend API to create the application record
       const res = await fetch('/api/apply', { 
         method: 'POST', 
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(finalData) 
       });
       const result = await res.json();
+      
+      // Step 2: Trigger payment using the unique application ID returned by the database
       if (res.ok && result.id) {
         const invoiceUrl = await createCryptoInvoice(result.id); 
-        if (invoiceUrl) window.location.href = invoiceUrl;
+        if (invoiceUrl) {
+          window.location.href = invoiceUrl; // Redirect the user to the NOWPayments gateway
+        } else {
+          alert("Payment gateway connection failed. Please try again.");
+        }
+      } else {
+        alert("Failed to save application. Please check your connection.");
       }
-    } catch (err) { console.error(err); } finally { setLoading(false); }
+    } catch (err) { 
+      console.error("Payment trigger error:", err); 
+      alert("An unexpected error occurred during processing.");
+    } finally { 
+      setLoading(false); 
+    }
   };
 
   return (
@@ -41,6 +56,7 @@ export default function FamilyApplication() {
           <div className="bg-orange-600 p-10 text-white text-center">
             <Users className="mx-auto mb-4" size={40} />
             <h1 className="text-3xl font-black uppercase italic tracking-tighter">Family Relocation</h1>
+            <p className="opacity-80 text-xs font-bold uppercase tracking-widest mt-1">Inclusive Household Migration Pathway</p>
           </div>
           
           <form onSubmit={handleSubmit} className="p-10 space-y-8">
@@ -52,23 +68,51 @@ export default function FamilyApplication() {
             <div className="pt-8 border-t border-orange-50 space-y-6">
               <div className="flex justify-between items-center">
                 <h3 className="font-bold flex items-center gap-2 text-orange-600 uppercase text-sm"><Heart size={18} /> Dependents Information</h3>
-                <button type="button" onClick={addDependent} className="flex items-center gap-1 text-xs font-bold uppercase text-orange-600 border border-orange-200 px-3 py-1 rounded-full hover:bg-orange-50"><Plus size={14}/> Add Member</button>
+                <button type="button" onClick={addDependent} className="flex items-center gap-1 text-xs font-bold uppercase text-orange-600 border border-orange-200 px-3 py-1 rounded-full hover:bg-orange-50">
+                  <Plus size={14}/> Add Member
+                </button>
               </div>
               
               {dependents.map((dep, index) => (
                 <div key={index} className="grid grid-cols-1 md:grid-cols-3 gap-3 p-4 bg-orange-50/30 rounded-2xl relative">
-                  <input placeholder="Name" className="p-3 border rounded-lg text-sm" value={dep.name} onChange={(e) => { const newDep = [...dependents]; newDep[index].name = e.target.value; setDependents(newDep); }} />
-                  <input placeholder="Relationship" className="p-3 border rounded-lg text-sm" value={dep.relationship} onChange={(e) => { const newDep = [...dependents]; newDep[index].relationship = e.target.value; setDependents(newDep); }} />
+                  <input 
+                    placeholder="Name" 
+                    className="p-3 border rounded-lg text-sm" 
+                    value={dep.name} 
+                    onChange={(e) => { const newDep = [...dependents]; newDep[index].name = e.target.value; setDependents(newDep); }} 
+                    required
+                  />
+                  <input 
+                    placeholder="Relationship" 
+                    className="p-3 border rounded-lg text-sm" 
+                    value={dep.relationship} 
+                    onChange={(e) => { const newDep = [...dependents]; newDep[index].relationship = e.target.value; setDependents(newDep); }} 
+                    required
+                  />
                   <div className="flex gap-2">
-                    <input placeholder="Age" className="p-3 border rounded-lg text-sm w-full" value={dep.age} onChange={(e) => { const newDep = [...dependents]; newDep[index].age = e.target.value; setDependents(newDep); }} />
-                    {index > 0 && <button type="button" onClick={() => removeDependent(index)} className="text-red-400 p-2"><Trash2 size={18}/></button>}
+                    <input 
+                      placeholder="Age" 
+                      className="p-3 border rounded-lg text-sm w-full" 
+                      value={dep.age} 
+                      onChange={(e) => { const newDep = [...dependents]; newDep[index].age = e.target.value; setDependents(newDep); }} 
+                      required
+                    />
+                    {index > 0 && (
+                      <button type="button" onClick={() => removeDependent(index)} className="text-red-400 p-2 hover:bg-red-50 rounded-lg transition-colors">
+                        <Trash2 size={18}/>
+                      </button>
+                    )}
                   </div>
                 </div>
               ))}
             </div>
 
-            <button disabled={loading} className="w-full bg-orange-600 hover:bg-orange-700 text-white py-6 rounded-2xl font-black uppercase tracking-[0.2em] shadow-lg flex items-center justify-center gap-3">
-              {loading ? "Redirecting..." : "Finalize & Pay $69.99"}
+            <button 
+              disabled={loading} 
+              type="submit"
+              className="w-full bg-orange-600 hover:bg-orange-700 text-white py-6 rounded-2xl font-black uppercase tracking-[0.2em] shadow-lg flex items-center justify-center gap-3 disabled:opacity-50 transition-all"
+            >
+              {loading ? "Processing Payment..." : "Finalize & Pay $69.99"}
               <ShieldCheck size={20} />
             </button>
           </form>
