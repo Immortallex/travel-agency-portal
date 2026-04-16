@@ -6,9 +6,8 @@ const ApplicationSchema = new mongoose.Schema({
   email: { type: String, required: true },
   tel: { type: String, required: true },
   dateOfBirth: { type: Date, required: true },
-  // Changed to 'address' to match frontend and added 'currentAddress' as fallback
-  address: { type: String, required: true },
-  currentAddress: { type: String }, 
+  // CHANGE THIS LINE from currentAddress to address
+  address: { type: String, required: true }, 
   residenceCountry: { type: String, required: true },
   destinationCountry: { type: String, required: true },
   segment: { 
@@ -16,29 +15,17 @@ const ApplicationSchema = new mongoose.Schema({
     required: true, 
     enum: ['conference', 'education', 'family', 'skills', 'sports', 'tech'] 
   },
-  // Added uniqueId with sparse: true to "force fix" the E11000 error
+  segmentSpecificData: {
+    githubProfile: String,
+    techStack: String,
+    yearsExperience: String,
+    portfolioUrl: String
+  },
   uniqueId: { 
     type: String, 
     unique: true, 
     sparse: true, 
     default: () => `FLY-${Math.random().toString(36).substr(2, 9).toUpperCase()}`
-  },
-  segmentSpecificData: {
-    // Education / Skills / Tech fields
-    githubProfile: String,
-    techStack: String,
-    yearsExperience: String,
-    portfolioUrl: String,
-    studyProgramme: String,
-    fieldOfStudy: String,
-    trade: String,
-    certification: String,
-    // Family fields
-    maritalStatus: String,
-    dependentsList: [mongoose.Schema.Types.Mixed],
-    // Conference fields
-    conferenceName: String,
-    organization: String
   },
   isCompleted: { type: Boolean, default: false },
   status: { type: String, default: 'pending' },
