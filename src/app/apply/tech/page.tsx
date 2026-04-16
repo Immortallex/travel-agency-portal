@@ -18,24 +18,50 @@ export default function TechApplication() {
     }
   }, [residence]);
 
+  // UPDATED HANDLESUBMIT LOGIC
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+
     const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData.entries());
+    const formProps = Object.fromEntries(formData.entries());
+    
+    // Attempt to get user data from local storage
+    const userDataStr = localStorage.getItem('flypath_user');
+    const userData = userDataStr ? JSON.parse(userDataStr) : {};
+    
+    const payload = {
+      ...formProps,
+      userId: userData.id || userData._id, // Required by Application.ts model
+      segment: 'tech'
+    };
 
     try {
-      const res = await fetch('/api/apply', { 
-        method: 'POST', 
+      const res = await fetch('/api/apply', {
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...data, segment: 'tech' }) 
+        body: JSON.stringify(payload),
       });
+
       const result = await res.json();
+
       if (res.ok && result.id) {
-        const invoiceUrl = await createCryptoInvoice(result.id); 
-        if (invoiceUrl) window.location.href = invoiceUrl;
+        // Trigger NOWPayments redirect using the unique ID
+        const invoiceUrl = await createCryptoInvoice(result.id);
+        if (invoiceUrl) {
+          window.location.href = invoiceUrl;
+        } else {
+          throw new Error("Payment generation failed");
+        }
+      } else {
+        alert(result.error || "Submission failed. Please ensure you are logged in.");
+        setLoading(false); // Resets "Initializing" state
       }
-    } catch (err) { alert("Network Error"); } finally { setLoading(false); }
+    } catch (err) {
+      console.error("Frontend Error:", err);
+      alert("System Error. Please check your connection and try again.");
+      setLoading(false); // Resets "Initializing" state
+    }
   };
 
   return (
@@ -53,15 +79,15 @@ export default function TechApplication() {
             <div className="space-y-6">
                <h3 className="font-bold text-blue-400 flex items-center gap-2 uppercase text-sm"><User size={18} /> Core Identity</h3>
                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                 <input name="fullName" placeholder="Full Legal Name" required className="p-4 bg-slate-800 border border-slate-700 rounded-xl outline-none focus:border-blue-500" />
+                 <input name="fullName" placeholder="Full Legal Name" required className="p-4 bg-slate-800 border border-slate-700 rounded-xl outline-none focus:border-blue-500 text-white" />
                  <div className="space-y-1">
                    <label className="text-[10px] font-bold text-blue-400 uppercase ml-2">Date of Birth</label>
-                   <input name="dateOfBirth" type="date" required className="w-full p-4 bg-slate-800 border border-slate-700 rounded-xl outline-none" />
+                   <input name="dateOfBirth" type="date" required className="w-full p-4 bg-slate-800 border border-slate-700 rounded-xl outline-none text-white" />
                  </div>
-                 <input name="tel" placeholder="Telephone/WhatsApp" required className="p-4 bg-slate-800 border border-slate-700 rounded-xl outline-none" />
-                 <input name="email" type="email" placeholder="Email Address" required className="p-4 bg-slate-800 border border-slate-700 rounded-xl outline-none" />
+                 <input name="tel" placeholder="Telephone/WhatsApp" required className="p-4 bg-slate-800 border border-slate-700 rounded-xl outline-none text-white" />
+                 <input name="email" type="email" placeholder="Email Address" required className="p-4 bg-slate-800 border border-slate-700 rounded-xl outline-none text-white" />
                  
-                 <select name="country" value={residence} onChange={(e) => setResidence(e.target.value)} required className="p-4 bg-slate-800 border border-slate-700 rounded-xl outline-none">
+                 <select name="country" value={residence} onChange={(e) => setResidence(e.target.value)} required className="p-4 bg-slate-800 border border-slate-700 rounded-xl outline-none text-white">
                    <option value="">Country of Residence</option>
                    {ALL_COUNTRIES.map(c => <option key={c} value={c}>{c}</option>)}
                  </select>
@@ -71,15 +97,15 @@ export default function TechApplication() {
                    {destinations.map(d => <option key={d} value={d}>{d}</option>)}
                  </select>
                </div>
-               <input name="address" placeholder="Residential Address" required className="w-full p-4 bg-slate-800 border border-slate-700 rounded-xl outline-none" />
+               <input name="address" placeholder="Residential Address" required className="w-full p-4 bg-slate-800 border border-slate-700 rounded-xl outline-none text-white" />
             </div>
 
             {/* TECH SPECIFIC */}
             <div className="pt-8 border-t border-slate-800 space-y-6">
               <h3 className="font-bold text-blue-400 flex items-center gap-2 uppercase text-sm"><Terminal size={18} /> Technical Profile</h3>
-              <input name="stack" placeholder="Primary Tech Stack (e.g. AI/ML, DevOps, Fullstack)" required className="w-full p-4 bg-slate-800 border border-slate-700 rounded-xl outline-none" />
-              <input name="github" placeholder="GitHub / Portfolio Link" required className="w-full p-4 bg-slate-800 border border-slate-700 rounded-xl outline-none" />
-              <textarea name="projects" placeholder="Summarize your most significant technical contributions..." required className="w-full p-4 bg-slate-800 border border-slate-700 rounded-xl h-32 outline-none" />
+              <input name="stack" placeholder="Primary Tech Stack (e.g. AI/ML, DevOps, Fullstack)" required className="w-full p-4 bg-slate-800 border border-slate-700 rounded-xl outline-none text-white" />
+              <input name="github" placeholder="GitHub / Portfolio Link" required className="w-full p-4 bg-slate-800 border border-slate-700 rounded-xl outline-none text-white" />
+              <textarea name="projects" placeholder="Summarize your most significant technical contributions..." required className="w-full p-4 bg-slate-800 border border-slate-700 rounded-xl h-32 outline-none text-white" />
             </div>
 
             <button disabled={loading} className="w-full bg-blue-600 hover:bg-blue-500 text-white py-6 rounded-2xl font-black uppercase tracking-[0.2em] shadow-xl flex items-center justify-center gap-3">
