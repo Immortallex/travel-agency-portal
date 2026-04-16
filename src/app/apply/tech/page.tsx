@@ -1,14 +1,22 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import { createCryptoInvoice } from "@/app/actions/crypto"; 
-import { Globe, ShieldCheck, Cpu, User, Terminal } from 'lucide-react';
+import { Globe, ShieldCheck, Cpu, User, Terminal, MapPin } from 'lucide-react';
 
 const ALL_COUNTRIES = ["Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Cameroon", "Canada", "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros", "Congo", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia", "Fiji", "Finland", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Korea, North", "Korea, South", "Kosovo", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Macedonia", "Norway", "Oman", "Pakistan", "Palau", "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"];
-const DESTINATIONS = ["United States", "Canada", "United Kingdom", "Australia", "Germany", "Japan", "Estonia"];
+const TECH_HUBS = ["United States", "Canada", "Germany", "Estonia", "Japan", "Singapore", "United Kingdom"];
 
 export default function TechApplication() {
   const [loading, setLoading] = useState(false);
+  const [residence, setResidence] = useState("");
+  const [destinations, setDestinations] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (residence) {
+      setDestinations(TECH_HUBS.filter(h => h !== residence).sort(() => 0.5 - Math.random()).slice(0, 5));
+    }
+  }, [residence]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -17,31 +25,17 @@ export default function TechApplication() {
     const data = Object.fromEntries(formData.entries());
 
     try {
-      // Step 1: Submit data to backend to create the application record
       const res = await fetch('/api/apply', { 
         method: 'POST', 
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...data, segment: 'tech' }) 
       });
       const result = await res.json();
-      
-      // Step 2: Trigger payment authentication using the returned application ID
       if (res.ok && result.id) {
         const invoiceUrl = await createCryptoInvoice(result.id); 
-        if (invoiceUrl) {
-          window.location.href = invoiceUrl; // Redirect to NOWPayments
-        } else {
-          alert("Payment authentication failed. Please try again.");
-        }
-      } else {
-        alert("Submission failed. Check your data and try again.");
+        if (invoiceUrl) window.location.href = invoiceUrl;
       }
-    } catch (err) { 
-      console.error("Tech Application Error:", err); 
-      alert("An unexpected error occurred.");
-    } finally { 
-      setLoading(false); 
-    }
+    } catch (err) { alert("Network Error"); } finally { setLoading(false); }
   };
 
   return (
@@ -52,40 +46,45 @@ export default function TechApplication() {
           <div className="bg-gradient-to-r from-blue-600 to-blue-800 p-10">
             <Globe className="mb-4 text-white" size={40} />
             <h1 className="text-3xl font-black uppercase italic tracking-tighter text-white">Tech Talent Visa</h1>
-            <p className="opacity-70 text-xs font-bold uppercase tracking-widest mt-1">High-Skill Technology Migration Pathway</p>
           </div>
           
           <form onSubmit={handleSubmit} className="p-10 space-y-8">
+            {/* FULL PERSONAL INFO */}
             <div className="space-y-6">
-               <h3 className="font-bold text-blue-400 flex items-center gap-2 uppercase text-sm"><User size={18} /> Identity Core</h3>
+               <h3 className="font-bold text-blue-400 flex items-center gap-2 uppercase text-sm"><User size={18} /> Core Identity</h3>
                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                 <input name="fullName" placeholder="Full Legal Name" required className="p-4 bg-slate-800/50 border border-slate-700 rounded-xl outline-none focus:border-blue-500 text-white placeholder:text-slate-500" />
-                 <input name="email" type="email" placeholder="Email Address" required className="p-4 bg-slate-800/50 border border-slate-700 rounded-xl outline-none focus:border-blue-500 text-white placeholder:text-slate-500" />
-                 <select name="country" required className="p-4 bg-slate-800/50 border border-slate-700 rounded-xl outline-none focus:border-blue-500 text-slate-300">
-                   <option value="">Current Residence</option>
+                 <input name="fullName" placeholder="Full Legal Name" required className="p-4 bg-slate-800 border border-slate-700 rounded-xl outline-none focus:border-blue-500" />
+                 <div className="space-y-1">
+                   <label className="text-[10px] font-bold text-blue-400 uppercase ml-2">Date of Birth</label>
+                   <input name="dateOfBirth" type="date" required className="w-full p-4 bg-slate-800 border border-slate-700 rounded-xl outline-none" />
+                 </div>
+                 <input name="tel" placeholder="Telephone/WhatsApp" required className="p-4 bg-slate-800 border border-slate-700 rounded-xl outline-none" />
+                 <input name="email" type="email" placeholder="Email Address" required className="p-4 bg-slate-800 border border-slate-700 rounded-xl outline-none" />
+                 
+                 <select name="country" value={residence} onChange={(e) => setResidence(e.target.value)} required className="p-4 bg-slate-800 border border-slate-700 rounded-xl outline-none">
+                   <option value="">Country of Residence</option>
                    {ALL_COUNTRIES.map(c => <option key={c} value={c}>{c}</option>)}
                  </select>
-                 <select name="destination" required className="p-4 bg-blue-900/30 border border-blue-500/50 rounded-xl outline-none text-blue-100 font-bold">
-                   <option value="">Relocation Hub</option>
-                   {DESTINATIONS.map(d => <option key={d} value={d}>{d}</option>)}
+
+                 <select name="destination" disabled={!residence} required className="p-4 bg-blue-900/30 border border-blue-500/50 rounded-xl outline-none font-bold text-blue-100">
+                   <option value="">{residence ? "Available Tech Hubs" : "Select Residence"}</option>
+                   {destinations.map(d => <option key={d} value={d}>{d}</option>)}
                  </select>
                </div>
+               <input name="address" placeholder="Residential Address" required className="w-full p-4 bg-slate-800 border border-slate-700 rounded-xl outline-none" />
             </div>
 
+            {/* TECH SPECIFIC */}
             <div className="pt-8 border-t border-slate-800 space-y-6">
               <h3 className="font-bold text-blue-400 flex items-center gap-2 uppercase text-sm"><Terminal size={18} /> Technical Profile</h3>
-              <input name="stack" placeholder="Primary Tech Stack (e.g. Fullstack, AI, DevOps)" required className="w-full p-4 bg-slate-800/50 border border-slate-700 rounded-xl outline-none focus:border-blue-500 text-white placeholder:text-slate-500" />
-              <input name="github" placeholder="GitHub / Portfolio / LinkedIn Link" required className="w-full p-4 bg-slate-800/50 border border-slate-700 rounded-xl outline-none focus:border-blue-500 text-white placeholder:text-slate-500" />
-              <textarea name="projects" placeholder="Summarize your most significant technical contributions and innovations..." required className="w-full p-4 bg-slate-800/50 border border-slate-700 rounded-xl h-32 outline-none focus:border-blue-500 text-white placeholder:text-slate-500" />
+              <input name="stack" placeholder="Primary Tech Stack (e.g. AI/ML, DevOps, Fullstack)" required className="w-full p-4 bg-slate-800 border border-slate-700 rounded-xl outline-none" />
+              <input name="github" placeholder="GitHub / Portfolio Link" required className="w-full p-4 bg-slate-800 border border-slate-700 rounded-xl outline-none" />
+              <textarea name="projects" placeholder="Summarize your most significant technical contributions..." required className="w-full p-4 bg-slate-800 border border-slate-700 rounded-xl h-32 outline-none" />
             </div>
 
-            <button 
-              disabled={loading} 
-              type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-500 text-white py-6 rounded-2xl font-black uppercase tracking-[0.2em] transition-all shadow-xl shadow-blue-900/20 flex items-center justify-center gap-3 disabled:opacity-50"
-            >
+            <button disabled={loading} className="w-full bg-blue-600 hover:bg-blue-500 text-white py-6 rounded-2xl font-black uppercase tracking-[0.2em] shadow-xl flex items-center justify-center gap-3">
               <Cpu size={20} className={loading ? "animate-spin" : ""} />
-              {loading ? "Initializing Secure Protocol..." : "Finalize & Pay $69.99"}
+              {loading ? "Initializing..." : "Finalize & Pay $69.99"}
               <ShieldCheck size={20} />
             </button>
           </form>
