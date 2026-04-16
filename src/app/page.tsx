@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Globe, Trophy, GraduationCap, Mic2, HeartHandshake, Briefcase, MessageCircle } from 'lucide-react';
+import { Globe, Trophy, GraduationCap, Mic2, HeartHandshake, Briefcase, MessageCircle, Users, Percent, MapPin } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 
 export default function HomePage() {
@@ -12,13 +12,10 @@ export default function HomePage() {
     setIsLoggedIn(!!localStorage.getItem('flypath_user'));
   }, []);
 
-  // ANTI-LOOP LOGIC
   const handlePathway = (path: string) => {
     if (isLoggedIn) {
-      // If logged in, go to profile to see unfinished apps or start new
-      router.push('/profile');
+      router.push(path); // Direct to path if logged in
     } else {
-      // If visitor, force sign-up
       router.push('/auth');
     }
   };
@@ -35,7 +32,6 @@ export default function HomePage() {
             FlyPath <span className="text-blue-500">Global</span>
           </h1>
           <div className="flex justify-center gap-4 mt-10">
-            {/* HERO BUTTON LOGIC */}
             <button 
               onClick={() => router.push(isLoggedIn ? '/profile' : '/auth')} 
               className="bg-blue-600 text-white px-10 py-5 rounded-2xl font-black uppercase tracking-widest shadow-xl hover:bg-blue-700 transition-all"
@@ -54,9 +50,26 @@ export default function HomePage() {
               The <span className="text-blue-500">Humanitarian</span> Pledge
             </h2>
             <p className="text-xl md:text-3xl text-slate-200 leading-relaxed font-light italic max-w-4xl mx-auto">
-              At FlyPath Travels, we help the <span className="text-white font-bold underline decoration-blue-500 underline-offset-8">incapacitated individuals</span> seeking relocation and new living; we believe in a world without barriers...
+              At FlyPath Travels, we help the <span className="text-white font-bold underline decoration-blue-500 underline-offset-8">incapacitated individuals</span> seeking relocation and new living...
             </p>
           </div>
+        </div>
+      </section>
+
+      {/* DYNAMIC STATISTICS SECTION */}
+      <section className="bg-[#0A192F] pb-24 px-6">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+          {[
+            { label: "Registered Users", value: "14,200+", icon: <Users className="text-blue-500" /> },
+            { label: "Success Rate", value: "98.4%", icon: <Percent className="text-blue-500" /> },
+            { label: "Destinations Covered", value: "45 Countries", icon: <MapPin className="text-blue-500" /> }
+          ].map((stat) => (
+            <div key={stat.label} className="bg-white/5 backdrop-blur-md border border-white/10 p-8 rounded-[2rem] text-center">
+              <div className="flex justify-center mb-4">{stat.icon}</div>
+              <h4 className="text-4xl font-black text-white mb-2">{stat.value}</h4>
+              <p className="text-slate-400 uppercase text-xs font-bold tracking-widest">{stat.label}</p>
+            </div>
+          ))}
         </div>
       </section>
 
