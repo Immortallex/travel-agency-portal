@@ -6,7 +6,7 @@ const ApplicationSchema = new mongoose.Schema({
   email: { type: String, required: true },
   tel: { type: String, required: true },
   dateOfBirth: { type: Date, required: true },
-  // CHANGE THIS LINE from currentAddress to address
+  // FIX: Frontend sends 'address', so we use 'address' here instead of currentAddress
   address: { type: String, required: true }, 
   residenceCountry: { type: String, required: true },
   destinationCountry: { type: String, required: true },
@@ -15,17 +15,23 @@ const ApplicationSchema = new mongoose.Schema({
     required: true, 
     enum: ['conference', 'education', 'family', 'skills', 'sports', 'tech'] 
   },
-  segmentSpecificData: {
-    githubProfile: String,
-    techStack: String,
-    yearsExperience: String,
-    portfolioUrl: String
-  },
+  // CRITICAL FIX: Add uniqueId with 'sparse' to stop the 500 Duplicate Key Error
   uniqueId: { 
     type: String, 
     unique: true, 
     sparse: true, 
-    default: () => `FLY-${Math.random().toString(36).substr(2, 9).toUpperCase()}`
+    default: () => `FLY-${Math.floor(100000 + Math.random() * 900000)}`
+  },
+  segmentSpecificData: {
+    githubProfile: String,
+    techStack: String,
+    yearsExperience: String,
+    portfolioUrl: String,
+    // Adding extra fields you might need for other segments
+    studyProgramme: String,
+    fieldOfStudy: String,
+    trade: String,
+    certification: String
   },
   isCompleted: { type: Boolean, default: false },
   status: { type: String, default: 'pending' },
