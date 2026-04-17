@@ -88,7 +88,7 @@ export default function TechApplication() {
         <div className="bg-slate-900 rounded-[2.5rem] shadow-2xl border border-blue-500/20 overflow-hidden">
           <div className="bg-gradient-to-r from-blue-600 to-blue-800 p-10">
             <Globe className="mb-4 text-white" size={40} />
-            <h1 className="text-3xl font-black uppercase italic tracking-tighter text-white">Tech Talent Visa</h1>
+            <h1 className="text-3xl font-black uppercase tracking-tighter text-white">Tech Visa Application</h1>
           </div>
           
           <form onSubmit={handleSubmit} className="p-10 space-y-8">
@@ -109,7 +109,7 @@ export default function TechApplication() {
                  </select>
 
                  <select name="destination" disabled={!residence} required className="p-4 bg-blue-900/30 border border-blue-500/50 rounded-xl outline-none font-bold text-blue-100">
-                   <option value="">{residence ? "Available Tech Hubs" : "Select Residence"}</option>
+                   <option value="">{residence ? "Available Tech Hubs" : "Select Residence First"}</option>
                    {destinations.map(d => <option key={d} value={d}>{d}</option>)}
                  </select>
                </div>

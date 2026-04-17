@@ -45,7 +45,7 @@ export default function SportsApplication() {
         <div className="bg-white rounded-[2.5rem] shadow-xl border border-emerald-100 overflow-hidden">
           <div className="bg-emerald-700 p-10 text-white text-center">
             <Trophy className="mx-auto mb-4" size={40} />
-            <h1 className="text-3xl font-black uppercase italic tracking-tighter">Athletic Recruitment</h1>
+            <h1 className="text-3xl font-black uppercase tracking-tighter">Athletic Application</h1>
           </div>
           
           <form onSubmit={handleSubmit} className="p-10 space-y-8">
@@ -77,9 +77,9 @@ export default function SportsApplication() {
             {/* SPORTS SPECIFIC */}
             <div className="pt-8 border-t border-emerald-100 space-y-6">
               <h3 className="font-bold flex items-center gap-2 uppercase text-sm text-emerald-600"><PlayCircle size={18} /> Career Profile</h3>
-              <input name="discipline" placeholder="Sports Discipline (e.g. Football, Tennis)" required className="w-full p-4 border rounded-xl outline-none" />
+              <input name="discipline" placeholder="Sports Specialization (Just Football, Basketball and Table Tennis)" required className="w-full p-4 border rounded-xl outline-none" />
               <input name="video" placeholder="Highlight Reel Link (YouTube/Vimeo)" required className="w-full p-4 border rounded-xl outline-none" />
-              <textarea name="history" placeholder="List your professional achievements and club affiliations..." required className="w-full p-4 border rounded-xl h-32 outline-none" />
+              <textarea name="history" placeholder="Position (e.g Striker, Defender...)" required className="w-full p-4 border rounded-xl h-32 outline-none" />
             </div>
 
             <button disabled={loading} className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-6 rounded-2xl font-black uppercase tracking-[0.2em] shadow-lg flex items-center justify-center gap-3">

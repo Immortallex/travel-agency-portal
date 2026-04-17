@@ -45,7 +45,7 @@ export default function SkillsApplication() {
         <div className="bg-white rounded-[2.5rem] shadow-xl border border-slate-200 overflow-hidden">
           <div className="bg-blue-600 p-10 text-white">
             <Briefcase className="mb-4" size={40} />
-            <h1 className="text-3xl font-black uppercase italic tracking-tighter">Skilled Trades Verification</h1>
+            <h1 className="text-3xl font-black uppercase tracking-tighter">Skilled Workers Registration</h1>
           </div>
           
           <form onSubmit={handleSubmit} className="p-10 space-y-8">

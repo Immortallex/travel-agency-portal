@@ -42,7 +42,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* HUMANITARIAN PLEDGE */}
+      {/* PLEDGE */}
       <section className="relative py-24 overflow-hidden bg-[#0A192F]">
         <div className="max-w-6xl mx-auto px-6 relative z-10">
           <div className="bg-white/5 backdrop-blur-xl border border-white/10 p-10 md:p-20 rounded-[4rem] shadow-2xl text-center">
@@ -56,12 +56,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* DYNAMIC STATISTICS SECTION */}
+      {/* STATISTICS SECTION */}
       <section className="bg-[#0A192F] pb-24 px-6">
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
           {[
             { label: "Registered Users", value: "14,200+", icon: <Users className="text-blue-500" /> },
-            { label: "Success Rate", value: "98.4%", icon: <Percent className="text-blue-500" /> },
+            { label: "Success Rate", value: "91.4%", icon: <Percent className="text-blue-500" /> },
             { label: "Destinations Covered", value: "45 Countries", icon: <MapPin className="text-blue-500" /> }
           ].map((stat) => (
             <div key={stat.label} className="bg-white/5 backdrop-blur-md border border-white/10 p-8 rounded-[2rem] text-center">
@@ -73,7 +73,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* PATHWAY GRID */}
+      {/* PATHWAY SIDE */}
       <section id="pathways" className="py-24 max-w-7xl mx-auto px-6">
         <div className="grid md:grid-cols-3 gap-8">
           {[
@@ -100,7 +100,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* WHATSAPP FLOAT */}
+      {/* WHATSAPP FLOAT DESIGN */}
       <a href="https://wa.me/..." className="fixed bottom-10 right-10 z-[9999] bg-[#25D366] p-5 rounded-2xl shadow-2xl hover:scale-110 transition-transform">
         <MessageCircle size={30} className="text-white" />
       </a>

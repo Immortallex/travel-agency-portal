@@ -45,13 +45,13 @@ export default function ConferenceApplication() {
         <div className="bg-white rounded-[2.5rem] shadow-xl border border-slate-200 overflow-hidden">
           <div className="bg-purple-700 p-10 text-white">
             <Mic2 className="mb-4" size={40} />
-            <h1 className="text-3xl font-black uppercase italic tracking-tighter">Global Conference Access</h1>
+            <h1 className="text-3xl font-black uppercase tracking-tighter">Global Conference Access</h1>
           </div>
           
           <form onSubmit={handleSubmit} className="p-10 space-y-8">
             {/* FULL PERSONAL INFO */}
             <div className="space-y-4">
-               <h3 className="font-bold text-slate-800 flex items-center gap-2 uppercase text-sm"><User size={18} className="text-purple-600" /> Delegate Identity</h3>
+               <h3 className="font-bold text-slate-800 flex items-center gap-2 uppercase text-sm"><User size={18} className="text-purple-600" /> Personal Information</h3>
                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                  <input name="fullName" placeholder="Full Legal Name" required className="p-4 bg-slate-50 border rounded-xl outline-none" />
                  <div className="space-y-1">
@@ -67,7 +67,7 @@ export default function ConferenceApplication() {
                  </select>
 
                  <select name="destination" disabled={!residence} required className="p-4 bg-purple-50 border-2 border-purple-200 rounded-xl outline-none font-bold text-purple-900 disabled:opacity-50">
-                   <option value="">{residence ? "Host Destinations" : "Select Residence"}</option>
+                   <option value="">{residence ? "Host Countries Available" : "Select Residence"}</option>
                    {destinations.map(d => <option key={d} value={d}>{d}</option>)}
                  </select>
                </div>

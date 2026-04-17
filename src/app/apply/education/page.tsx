@@ -14,7 +14,6 @@ export default function EducationApplication() {
 
   useEffect(() => {
     if (residence) {
-      // Logic for available destination countries based on residence
       const filtered = GLOBAL_DESTINATIONS.filter(d => d !== residence).sort(() => 0.5 - Math.random());
       setDestinations(filtered.slice(0, 6));
     }
@@ -49,13 +48,13 @@ export default function EducationApplication() {
         <div className="bg-white rounded-[2.5rem] shadow-xl border border-indigo-100 overflow-hidden">
           <div className="bg-indigo-800 p-10 text-white">
             <GraduationCap className="mb-4" size={40} />
-            <h1 className="text-3xl font-black uppercase italic tracking-tighter">Academic Placement</h1>
+            <h1 className="text-3xl font-black uppercase tracking-tighter">Academic Registration</h1>
           </div>
           
           <form onSubmit={handleSubmit} className="p-10 space-y-8">
             {/* FULL PERSONAL INFORMATION */}
             <div className="space-y-4">
-              <h3 className="font-bold text-slate-800 flex items-center gap-2 uppercase text-sm"><User size={18} className="text-indigo-600" /> Principal Identity</h3>
+              <h3 className="font-bold text-slate-800 flex items-center gap-2 uppercase text-sm"><User size={18} className="text-indigo-600" /> Personal Information</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <input name="fullName" placeholder="Full Legal Name" required className="p-4 bg-slate-50 border rounded-xl outline-none" />
                 <div className="space-y-1">
