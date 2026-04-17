@@ -19,26 +19,50 @@ export default function EducationApplication() {
     }
   }, [residence]);
 
+  // UPDATED HANDLESUBMIT FOR FORCE FIX
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+
     const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData.entries());
+    const formProps = Object.fromEntries(formData.entries());
+    
+    // Attempt to get user data from local storage to prevent "Missing User ID" error
+    const userDataStr = localStorage.getItem('flypath_user');
+    const userData = userDataStr ? JSON.parse(userDataStr) : {};
+    
+    const payload = {
+      ...formProps,
+      userId: userData.id || userData._id, 
+      segment: 'education'
+    };
 
     try {
       const res = await fetch('/api/apply', { 
         method: 'POST', 
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...data, segment: 'education' }) 
+        body: JSON.stringify(payload) 
       });
+
       const result = await res.json();
+
       if (res.ok && result.id) {
+        // Triggers the NOWPayments redirect using the unique ID returned by API
         const invoiceUrl = await createCryptoInvoice(result.id); 
-        if (invoiceUrl) window.location.href = invoiceUrl;
+        if (invoiceUrl) {
+            window.location.href = invoiceUrl;
+        } else {
+            throw new Error("Payment link generation failed");
+        }
       } else {
-        alert(result.error || "Submission error. Check all fields.");
+        alert(result.error || result.details || "Submission error. Ensure you are logged in.");
+        setLoading(false); // Stops the "Authenticating..." hang
       }
-    } catch (err) { alert("Server error."); } finally { setLoading(false); }
+    } catch (err) { 
+        console.error("Education Submit Error:", err);
+        alert("Server error. Please try again."); 
+        setLoading(false); 
+    }
   };
 
   return (
@@ -85,6 +109,7 @@ export default function EducationApplication() {
                   {destinations.map(d => <option key={d} value={d}>{d}</option>)}
                 </select>
               </div>
+              {/* This field name must match what the API looks for */}
               <input name="address" placeholder="Full Residential Address" required className="w-full p-4 bg-slate-50 border rounded-xl outline-none" />
             </div>
 
@@ -107,7 +132,7 @@ export default function EducationApplication() {
               <textarea name="goals" placeholder="Briefly describe your academic and career goals..." required className="w-full p-4 border rounded-xl h-32 outline-none" />
             </div>
 
-            <button disabled={loading} className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-6 rounded-2xl font-black uppercase tracking-[0.2em] transition-all shadow-lg flex items-center justify-center gap-3">
+            <button disabled={loading} className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-6 rounded-2xl font-black uppercase tracking-[0.2em] transition-all shadow-lg flex items-center justify-center gap-3 active:scale-[0.98]">
               {loading ? "Authenticating..." : "Finalize & Pay $69.99"}
               <ShieldCheck size={20} />
             </button>
