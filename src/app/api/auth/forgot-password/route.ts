@@ -41,7 +41,8 @@ export async function POST(req: Request) {
     await user.save();
 
     // 7. Construct the Reset URL pointing to your frontend/page.tsx]
-    const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL}/auth/reset-password/${resetToken}`;
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://flypathtravels.com';
+    const resetUrl = `${baseUrl}/auth/reset-password/${resetToken}`;
     
     // 8. Send the email via Resend
     const { data, error } = await resend.emails.send({
