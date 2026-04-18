@@ -3,12 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { 
   Globe, Trophy, GraduationCap, Mic2, HeartHandshake, 
-  Briefcase, MessageCircle, Users, Percent, MapPin, 
-  Mail, Phone, ShieldCheck,
-  // Using standard names that exist in Lucide
-  Instagram as InstagramIcon,
-  Facebook as FacebookIcon,
-  Twitter as TwitterIcon
+  Briefcase, MessageCircle, Users, Percent, MapPin,
+  Mail, Phone, ShieldCheck // Added Mail, Phone, ShieldCheck
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 
@@ -22,7 +18,7 @@ export default function HomePage() {
 
   const handlePathway = (path: string) => {
     if (isLoggedIn) {
-      router.push(path); 
+      router.push(path); // Direct to path if logged in
     } else {
       router.push('/auth');
     }
@@ -32,7 +28,7 @@ export default function HomePage() {
     <main className="min-h-screen bg-white relative">
       <Navbar />
       
-      {/* HERO SECTION */}
+      {/* HERO */}
       <section className="relative h-[85vh] flex items-center justify-center bg-[#0A192F]">
         <img src="/images/homepage.webp" className="absolute inset-0 w-full h-full object-cover opacity-30" alt="Home" />
         <div className="relative z-10 text-center px-6">
@@ -50,7 +46,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* PLEDGE SECTION */}
+      {/* PLEDGE */}
       <section className="relative py-24 overflow-hidden bg-[#0A192F]">
         <div className="max-w-6xl mx-auto px-6 relative z-10">
           <div className="bg-white/5 backdrop-blur-xl border border-white/10 p-10 md:p-20 rounded-[4rem] shadow-2xl text-center">
@@ -64,7 +60,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* STATISTICS */}
+      {/* STATISTICS SECTION */}
       <section className="bg-[#0A192F] pb-24 px-6">
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
           {[
@@ -81,7 +77,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* PATHWAYS */}
+      {/* PATHWAY SIDE */}
       <section id="pathways" className="py-24 max-w-7xl mx-auto px-6">
         <div className="grid md:grid-cols-3 gap-8">
           {[
@@ -108,65 +104,66 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* FOOTER SECTION WITH UPDATED SOCIAL ICONS */}
-      <section className="bg-slate-50 py-24 px-6 border-t border-slate-100">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
-          <div className="space-y-4">
-            <h4 className="text-blue-600 font-black uppercase tracking-widest text-sm flex items-center gap-2">
-              <MapPin size={18} /> Physical Address
-            </h4>
-            <p className="text-slate-600 font-medium leading-relaxed">
-              3897 Venture Place, Slave Lake<br />
-              Alberta, Canada T0G 2B3
+      {/* DYNAMIC FOOTER */}
+      <footer className="bg-[#0A192F] pt-24 pb-12 px-6 border-t border-white/5">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-4 gap-12 mb-20">
+            
+            {/* BRAND & DESCRIPTION */}
+            <div className="md:col-span-2">
+              <h2 className="text-3xl font-black text-white uppercase italic tracking-tighter mb-6">
+                FlyPath <span className="text-blue-500">Travels</span>
+              </h2>
+              <p className="text-slate-400 text-lg leading-relaxed max-w-md italic">
+                Empowering individuals through specialized relocation pathways. From Tech and Education to Sports and Humanitarian assistance, we navigate the complexities of global migration to ensure your journey is seamless and successful.
+              </p>
+            </div>
+
+            {/* CONTACT INFO */}
+            <div>
+              <h4 className="text-white font-bold uppercase tracking-widest text-sm mb-6">Connect With Us</h4>
+              <ul className="space-y-4">
+                <li className="flex items-start gap-4 text-slate-400 hover:text-white transition-colors group">
+                  <MapPin className="text-blue-500 shrink-0" size={20} />
+                  <span className="text-sm">123 Travel Plaza, Business District,<br />City, Country (Edit Address)</span>
+                </li>
+                <li className="flex items-center gap-4 text-slate-400 hover:text-white transition-colors group">
+                  <Phone className="text-blue-500 shrink-0" size={20} />
+                  <span className="text-sm">+1 (234) 567-890</span>
+                </li>
+                <li className="flex items-center gap-4 text-slate-400 hover:text-white transition-colors group">
+                  <Mail className="text-blue-500 shrink-0" size={20} />
+                  <span className="text-sm">info@flypathtravels.com</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* TRUST INDICATOR */}
+            <div>
+              <h4 className="text-white font-bold uppercase tracking-widest text-sm mb-6">Our Assurance</h4>
+              <div className="bg-white/5 border border-white/10 p-6 rounded-3xl">
+                <ShieldCheck className="text-blue-500 mb-3" size={32} />
+                <p className="text-xs text-slate-300 font-medium leading-tight">
+                  Verified and secure processing for all relocation categories.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* BOTTOM BAR */}
+          <div className="pt-8 border-t border-white/5 flex flex-col md:row justify-between items-center gap-4">
+            <p className="text-slate-500 text-xs font-bold uppercase tracking-[0.2em]">
+              © FlyPath Travels – 2026
+            </p>
+            <p className="text-slate-600 text-[10px] uppercase font-black tracking-widest">
+              Launched by <span className="text-slate-400">FlyPath</span>
             </p>
           </div>
-
-          <div className="space-y-4">
-            <h4 className="text-blue-600 font-black uppercase tracking-widest text-sm flex items-center gap-2">
-              <MessageCircle size={18} /> Contact
-            </h4>
-            <div className="space-y-2">
-              <a href="mailto:support@flypathtravels.com" className="flex items-center gap-3 text-slate-600 hover:text-blue-600 transition-colors italic">
-                <Mail size={18} /> info@flypathtravels.com
-              </a>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <h4 className="text-blue-600 font-black uppercase tracking-widest text-sm flex items-center gap-2">
-              <Globe size={18} /> Socials
-            </h4>
-            <div className="flex gap-4">
-              <div className="bg-white p-3 rounded-xl shadow-sm text-slate-400 hover:text-blue-600 transition-all cursor-pointer">
-                <InstagramIcon size={20} />
-              </div>
-              <div className="bg-white p-3 rounded-xl shadow-sm text-slate-400 hover:text-blue-400 transition-all cursor-pointer">
-                <TwitterIcon size={20} />
-              </div>
-              <div className="bg-white p-3 rounded-xl shadow-sm text-slate-400 hover:text-blue-800 transition-all cursor-pointer">
-                <FacebookIcon size={20} />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <footer className="bg-white py-12 border-t border-slate-100">
-        <div className="max-w-6xl mx-auto px-6 flex flex-col items-center gap-6">
-          <div className="flex items-center gap-2 bg-blue-50 px-6 py-3 rounded-full border border-blue-100">
-            <ShieldCheck className="text-blue-600" size={24} />
-            <span className="text-blue-900 font-black uppercase tracking-tighter text-sm italic">
-              Official FlyPath Travels Verification
-            </span>
-          </div>
-          <p className="text-slate-400 text-[10px] font-bold uppercase tracking-[0.3em]">
-            © {new Date().getFullYear()} FlyPath Travels.
-          </p>
         </div>
       </footer>
 
-      {/* WHATSAPP FLOAT */}
-      <a href="#" className="fixed bottom-10 right-10 z-[9999] bg-[#25D366] p-5 rounded-2xl shadow-2xl hover:scale-110 transition-transform">
+      {/* WHATSAPP FLOAT DESIGN */}
+      <a href="https://wa.me/..." className="fixed bottom-10 right-10 z-[9999] bg-[#25D366] p-5 rounded-2xl shadow-2xl hover:scale-110 transition-transform">
         <MessageCircle size={30} className="text-white" />
       </a>
     </main>
