@@ -138,16 +138,18 @@ export default function HomePage() {
               </ul>
             </div>
 
-            {/* TRUST INDICATOR */}
-            <div>
-              <h4 className="text-white font-bold uppercase tracking-widest text-sm mb-6 items-center text-center">Our Assurance</h4>
-              <div className="bg-white/5 border border-white/10 p-6 rounded-3xl items-center text-center">
-                <ShieldCheck className="text-blue-500 mb-3" size={32} />
-                <p className="text-xs text-slate-300 font-medium leading-tight text-center">
-                  Verified and secure processing for all relocation categories.
-                </p>
-              </div>
-            </div>
+                    {/* TRUST INDICATOR */}
+        <div className="flex flex-col items-center text-center">
+          <h4 className="text-white font-bold uppercase tracking-widest text-sm mb-6">
+            Our Assurance
+          </h4>
+          <div className="bg-white/5 border border-white/10 p-6 rounded-3xl w-full max-w-sm flex flex-col items-center">
+            <ShieldCheck className="text-blue-500 mb-3" size={32} />
+            <p className="text-xs text-slate-300 font-medium leading-tight">
+              Verified and secure processing for all relocation categories.
+            </p>
+          </div>
+        </div>
           </div>
 
           {/* BOTTOM BAR */}
