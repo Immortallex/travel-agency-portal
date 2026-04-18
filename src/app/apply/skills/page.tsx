@@ -113,7 +113,7 @@ export default function SkillsApplication() {
               <ShieldCheck size={20} />
             </button>
             <p>
-              <br><font color="red" type="Times New Roman">Note, this is just one time payment, we use this fee as a route to every successful application applicable to you.</font></br>
+              <br><font color="red">Note, this is just one time payment, we use this fee as a route to every successful application applicable to you.</font></br>
               </p>
           </form>
         </div>
