@@ -125,7 +125,7 @@ export default function HomePage() {
               <ul className="space-y-4">
                 <li className="flex items-start gap-4 text-slate-400 hover:text-white transition-colors group">
                   <MapPin className="text-blue-500 shrink-0" size={20} />
-                  <span className="text-sm">3897 Venture Place,<br />Slave Lake Alberta, Canada T0G 2B3</span>
+                  <span className="text-sm">3897 Venture Place,<br /> Slave Lake Alberta,<br />Canada T0G 2B3</span>
                 </li>
                 <li className="flex items-center gap-4 text-slate-400 hover:text-white transition-colors group">
                   <Phone className="text-blue-500 shrink-0" size={20} />
