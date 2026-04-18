@@ -6,9 +6,9 @@ import {
   Briefcase, MessageCircle, Users, Percent, MapPin, 
   Mail, Phone, ShieldCheck,
   // Using standard names that exist in Lucide
-  Instagram as Instagram,
-  Facebook as Facebook,
-  Twitter as Twitter
+  Instagram as InstagramIcon,
+  Facebook as FacebookIcon,
+  Twitter as TwitterIcon
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 
@@ -138,13 +138,13 @@ export default function HomePage() {
             </h4>
             <div className="flex gap-4">
               <div className="bg-white p-3 rounded-xl shadow-sm text-slate-400 hover:text-blue-600 transition-all cursor-pointer">
-                <Instagram size={20} />
+                <InstagramIcon size={20} />
               </div>
               <div className="bg-white p-3 rounded-xl shadow-sm text-slate-400 hover:text-blue-400 transition-all cursor-pointer">
-                <Twitter size={20} />
+                <TwitterIcon size={20} />
               </div>
               <div className="bg-white p-3 rounded-xl shadow-sm text-slate-400 hover:text-blue-800 transition-all cursor-pointer">
-                <Facebook size={20} />
+                <FacebookIcon size={20} />
               </div>
             </div>
           </div>
