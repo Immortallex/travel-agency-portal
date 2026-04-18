@@ -136,6 +136,11 @@ export default function EducationApplication() {
               {loading ? "Authenticating..." : "Finalize & Pay $69.99"}
               <ShieldCheck size={20} />
             </button>
+            <p className="mt-4 text-center text-xs text-red-600 font-medium leading-relaxed">
+              * Note: This is a one-time payment. We use this fee as a route to facilitate every successful 
+              application applicable to you, ensuring the completion of your entire application 
+              process and relocation requirements.
+            </p>
           </form>
         </div>
       </div>
