@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
+import { sendTelegramNotification } from "@/lib/telegram";
 
 // Initializing Resend with your Vercel Environment Variable
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -19,8 +20,15 @@ export async function POST(req: Request) {
       // Format: FLY - [5 Random Alphanumeric Characters]
       const trackingId = `FLY-${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
 
-      // 4. Send the Email via Resend
-      // NOTE: 'from' must match your verified root domain in Resend
+      // NEW: Telegram Notification for Successful Transaction
+      await sendTelegramNotification(`
+<b>✅ Successful Transaction Initiated</b>
+<b>User:</b> ${body.customer_email || 'Unknown'}
+<b>Tracking ID:</b> ${trackingId}
+<b>Status:</b> ${body.payment_status}
+      `);
+
+      // 4. Sending Email via Resend
       const { data, error } = await resend.emails.send({
         from: 'FlyPath Travels <no-reply@flypathtravels.com>',
         to: body.customer_email || 'applicant@email.com', 
@@ -59,12 +67,27 @@ export async function POST(req: Request) {
       } else {
         console.log("Email sent successfully:", data?.id);
       }
+    } 
+    // NEW: Handle Abandoned or Failed Transactions
+    else if (body.payment_status === 'failed' || body.payment_status === 'expired') {
+      await sendTelegramNotification(`
+<b>⚠️ Abandoned Transaction</b>
+<b>User:</b> ${body.customer_email || 'Unknown'}
+<b>Status:</b> ${body.payment_status}
+<b>Reason:</b> Payment not completed by user
+      `);
     }
 
     // Always return a 200 to NOWPayments so they stop retrying
     return NextResponse.json({ status: 'success' }, { status: 200 });
 
   } catch (err) {
+    // NEW: Notify Telegram for system-level abandoned errors
+    await sendTelegramNotification(`
+<b>⚠️ Abandoned Transaction</b>
+<b>System Error:</b> Webhook processing failed
+    `);
+
     console.error('Webhook processing failed:', err);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
