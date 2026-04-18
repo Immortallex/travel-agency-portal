@@ -8,7 +8,7 @@ export default function PathwaySelection() {
     { name: "Family Relocation", icon: <Users />, href: "/apply/family" },
     { name: "Education Relocation", icon: <GraduationCap />, href: "/apply/education" },
     { name: "Sports Relocation", icon: <Trophy />, href: "/apply/sports" },
-    { name: "Skills Relocation", icon: <Briefcase />, href: "/apply/sports" },
+    { name: "Skills Relocation", icon: <Briefcase />, href: "/apply/skills" },
     { name: "Conference Relocation", icon: <Mic2 />, href: "/apply/conference" }
   ];
 
