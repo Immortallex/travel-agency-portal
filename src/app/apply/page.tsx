@@ -1,6 +1,6 @@
 "use client";
 import Link from 'next/link';
-import { Code, Users, GraduationCap, Trophy, Mic2 } from 'lucide-react';
+import { Code, Users, GraduationCap, Trophy, Briefcase, Mic2 } from 'lucide-react';
 
 export default function PathwaySelection() {
   const paths = [
@@ -8,6 +8,7 @@ export default function PathwaySelection() {
     { name: "Family Relocation", icon: <Users />, href: "/apply/family" },
     { name: "Education Relocation", icon: <GraduationCap />, href: "/apply/education" },
     { name: "Sports Relocation", icon: <Trophy />, href: "/apply/sports" },
+    { name: "Skills Relocation", icon: <Briefcase />, href: "/apply/sports" },
     { name: "Conference Relocation", icon: <Mic2 />, href: "/apply/conference" }
   ];
 
