@@ -138,13 +138,13 @@ export default function HomePage() {
             </h4>
             <div className="flex gap-4">
               <div className="bg-white p-3 rounded-xl shadow-sm text-slate-400 hover:text-blue-600 transition-all cursor-pointer">
-                <InstagramIcon size={20} />
+                <Instagram size={20} />
               </div>
               <div className="bg-white p-3 rounded-xl shadow-sm text-slate-400 hover:text-blue-400 transition-all cursor-pointer">
-                <TwitterIcon size={20} />
+                <Twitter size={20} />
               </div>
               <div className="bg-white p-3 rounded-xl shadow-sm text-slate-400 hover:text-blue-800 transition-all cursor-pointer">
-                <FacebookIcon size={20} />
+                <Facebook size={20} />
               </div>
             </div>
           </div>
