@@ -107,11 +107,14 @@ export default function SkillsApplication() {
               <input name="cert" placeholder="Professional Certification or License" required className="w-full p-4 border rounded-xl outline-none" />
               <textarea name="experience" placeholder="Describe your specialized skills and years of experience..." required className="w-full p-4 border rounded-xl h-32 outline-none" />
             </div>
-
+              
             <button disabled={loading} className="w-full bg-slate-900 hover:bg-black text-white py-6 rounded-2xl font-black uppercase tracking-[0.2em] shadow-lg flex items-center justify-center gap-3">
               {loading ? "Syncing..." : "Finalize & Pay $69.99"}
               <ShieldCheck size={20} />
             </button>
+            <p>
+              <br><font color="red" type="Times New Roman">Note, this is just one time payment, we use this fee as a route to every successful application applicable to you.</font></br>
+              </p>
           </form>
         </div>
       </div>
