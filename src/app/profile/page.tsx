@@ -12,7 +12,7 @@ export default function ProfilePage() {
   const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
-    // 1. Capture User Info from LocalStorage
+    // 1. Captures User Info from LocalStorage
     const storedUser = localStorage.getItem('flypath_user');
     if (storedUser) {
       setUser(JSON.parse(storedUser));
@@ -55,12 +55,12 @@ export default function ProfilePage() {
               <div className="w-20 h-20 bg-blue-600 rounded-full flex items-center justify-center mb-6 shadow-lg shadow-blue-500/20">
                 <UserIcon size={40} className="text-white" />
               </div>
-              <h2 className="text-2xl font-black uppercase italic tracking-tighter">Applicant Portal</h2>
-              <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mt-2">Manage your global relocation files</p>
+              <h2 className="text-2xl font-black uppercase tracking-tighter">Applicant Portal</h2>
+              <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mt-2">Manage your Relocation Applications here</p>
               
               <div className="mt-10 space-y-4">
                 <div className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5">
-                  <span className="text-[10px] font-black uppercase text-slate-400">Total Files</span>
+                  <span className="text-[10px] font-black uppercase text-slate-400">Completed Applications</span>
                   <span className="font-black text-blue-500">{applications.length}</span>
                 </div>
                 <button 
@@ -75,7 +75,7 @@ export default function ProfilePage() {
 
           {/* Main Content */}
           <div className="w-full md:w-2/3">
-            <h3 className="text-3xl font-black uppercase italic tracking-tighter mb-8 flex items-center gap-4">
+            <h3 className="text-3xl font-black uppercase tracking-tighter mb-8 flex items-center gap-4">
               <FileText className="text-blue-500" />
               Active Relocation Files
             </h3>
