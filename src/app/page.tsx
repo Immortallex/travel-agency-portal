@@ -50,7 +50,7 @@ export default function HomePage() {
       <section className="relative py-24 overflow-hidden bg-[#0A192F]">
         <div className="max-w-6xl mx-auto px-6 relative z-10">
           <div className="bg-white/5 backdrop-blur-xl border border-white/10 p-10 md:p-20 rounded-[4rem] shadow-2xl text-center">
-            <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter mb-10 uppercase">
+            <h2 className="text-4xl md:text-6xl font-black text-white italic tracking-tighter mb-10 uppercase">
               The <span className="text-blue-500">Humanitarian</span> Pledge
             </h2>
             <p className="text-xl md:text-3xl text-slate-200 leading-relaxed font-light italic max-w-4xl mx-auto">
