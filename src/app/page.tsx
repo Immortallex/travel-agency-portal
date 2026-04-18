@@ -139,17 +139,17 @@ export default function HomePage() {
             </div>
 
             {/* TRUST INDICATOR */}
-            <div className="flex flex-col items-center text-center">
-  <h4 className="text-white font-bold uppercase tracking-widest text-sm mb-6">
-    Our Assurance
-  </h4>
-  <div className="bg-white/5 border border-white/10 p-6 rounded-3xl w-full max-w-sm flex flex-col items-center">
-    <ShieldCheck className="text-blue-500 mb-3" size={32} />
-    <p className="text-xs text-slate-300 font-medium leading-tight">
-      Verified and secure processing for all relocation categories.
-    </p>
-  </div>
-</div>
+            <div>
+              <h4 className="text-white font-bold uppercase tracking-widest text-sm mb-6 items-center text-center">Our Assurance</h4>
+              <div className="bg-white/5 border border-white/10 p-6 rounded-3xl">
+                <ShieldCheck className="text-blue-500 mb-3" size={32} />
+                <p className="text-xs text-slate-300 font-medium leading-tight">
+                  Verified and secure processing for all relocation categories.
+                </p>
+              </div>
+            </div>
+          </div>
+
           {/* BOTTOM BAR */}
           <div className="pt-8 border-t border-white/5 flex flex-col md:row justify-between items-center gap-4">
             <p className="text-slate-500 text-xs font-bold uppercase tracking-[0.2em]">
