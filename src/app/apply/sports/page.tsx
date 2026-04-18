@@ -18,24 +18,51 @@ export default function SportsApplication() {
     }
   }, [residence]);
 
+  // FIXED HANDLESUBMIT
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData.entries());
+    const formProps = Object.fromEntries(formData.entries());
+
+    // 1. Get User Data from localStorage
+    const userDataStr = localStorage.getItem('flypath_user');
+    const userData = userDataStr ? JSON.parse(userDataStr) : {};
+
+    const payload = {
+      ...formProps,
+      userId: userData.id || userData._id, 
+      segment: 'sports' 
+    };
 
     try {
+      // 2. Send to Universal API
       const res = await fetch('/api/apply', { 
         method: 'POST', 
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...data, segment: 'sports' }) 
+        body: JSON.stringify(payload) 
       });
+
       const result = await res.json();
+
       if (res.ok && result.id) {
+        // 3. Trigger NOWPayments redirect
         const invoiceUrl = await createCryptoInvoice(result.id); 
-        if (invoiceUrl) window.location.href = invoiceUrl;
+        if (invoiceUrl) {
+            window.location.href = invoiceUrl;
+        } else {
+            alert("Payment link generation failed.");
+            setLoading(false);
+        }
+      } else {
+        alert(result.error || "Please ensure you are logged in.");
+        setLoading(false);
       }
-    } catch (err) { alert("Submission error"); } finally { setLoading(false); }
+    } catch (err) { 
+        console.error("Sports Submit Error:", err);
+        alert("Submission error. Please try again."); 
+        setLoading(false); 
+    }
   };
 
   return (
@@ -49,7 +76,6 @@ export default function SportsApplication() {
           </div>
           
           <form onSubmit={handleSubmit} className="p-10 space-y-8">
-            {/* FULL PERSONAL INFO */}
             <div className="space-y-4">
                <h3 className="font-bold text-emerald-700 flex items-center gap-2 uppercase text-sm"><User size={18} /> Athlete Identity</h3>
                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -74,10 +100,18 @@ export default function SportsApplication() {
                <input name="address" placeholder="Residential Address" required className="w-full p-4 bg-emerald-50 border border-emerald-100 rounded-xl outline-none" />
             </div>
 
-            {/* SPORTS SPECIFIC */}
             <div className="pt-8 border-t border-emerald-100 space-y-6">
               <h3 className="font-bold flex items-center gap-2 uppercase text-sm text-emerald-600"><PlayCircle size={18} /> Career Profile</h3>
-              <input name="discipline" placeholder="Sports Specialization (Just Football, Basketball and Table Tennis)" required className="w-full p-4 border rounded-xl outline-none" />
+              
+              {/* UPDATED TO DROPDOWN */}
+              <select name="discipline" required className="w-full p-4 border rounded-xl outline-none bg-white">
+                <option value="">Select Sports Specialization</option>
+                <option value="football">Football</option>
+                <option value="Basketball">Basketball</option>
+                <option value="Tennis">Tennis</option>
+                <option value="Pool">Pool</option>
+              </select>
+
               <input name="video" placeholder="Highlight Reel Link (YouTube/Vimeo)" required className="w-full p-4 border rounded-xl outline-none" />
               <textarea name="history" placeholder="Position (e.g Striker, Defender...)" required className="w-full p-4 border rounded-xl h-32 outline-none" />
             </div>

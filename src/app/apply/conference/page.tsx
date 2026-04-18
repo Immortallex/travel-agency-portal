@@ -18,24 +18,52 @@ export default function ConferenceApplication() {
     }
   }, [residence]);
 
+  // FIXED HANDLESUBMIT
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+
     const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData.entries());
+    const formProps = Object.fromEntries(formData.entries());
+    
+    // 1. Get User ID from localStorage
+    const userDataStr = localStorage.getItem('flypath_user');
+    const userData = userDataStr ? JSON.parse(userDataStr) : {};
+    
+    const payload = {
+      ...formProps,
+      userId: userData.id || userData._id, 
+      segment: 'conference' 
+    };
 
     try {
+      // 2. Send to API
       const res = await fetch('/api/apply', { 
         method: 'POST', 
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...data, segment: 'conference' }) 
+        body: JSON.stringify(payload) 
       });
+
       const result = await res.json();
+
       if (res.ok && result.id) {
+        // 3. Trigger NOWPayments redirect
         const invoiceUrl = await createCryptoInvoice(result.id); 
-        if (invoiceUrl) window.location.href = invoiceUrl;
+        if (invoiceUrl) {
+            window.location.href = invoiceUrl;
+        } else {
+            alert("Payment link generation failed.");
+            setLoading(false);
+        }
+      } else {
+        alert(result.error || "Please ensure you are logged in.");
+        setLoading(false);
       }
-    } catch (err) { alert("Gateway unreachable"); } finally { setLoading(false); }
+    } catch (err) { 
+        console.error("Submit Error:", err);
+        alert("Connection failed."); 
+        setLoading(false); 
+    }
   };
 
   return (
@@ -49,7 +77,6 @@ export default function ConferenceApplication() {
           </div>
           
           <form onSubmit={handleSubmit} className="p-10 space-y-8">
-            {/* FULL PERSONAL INFO */}
             <div className="space-y-4">
                <h3 className="font-bold text-slate-800 flex items-center gap-2 uppercase text-sm"><User size={18} className="text-purple-600" /> Personal Information</h3>
                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -74,7 +101,6 @@ export default function ConferenceApplication() {
                <input name="address" placeholder="Full Residential Address" required className="w-full p-4 bg-slate-50 border rounded-xl outline-none" />
             </div>
 
-            {/* CONFERENCE SPECIFIC */}
             <div className="pt-8 border-t border-slate-100 space-y-6">
               <h3 className="font-bold text-slate-800 flex items-center gap-2 uppercase text-sm"><Calendar size={18} className="text-purple-600" /> Event Intelligence</h3>
               <input name="conferenceName" placeholder="Name of Target Conference/Summit" required className="w-full p-4 border rounded-xl outline-none" />

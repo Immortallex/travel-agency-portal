@@ -18,24 +18,52 @@ export default function SkillsApplication() {
     }
   }, [residence]);
 
+  // FIXED HANDLESUBMIT
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+
     const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData.entries());
+    const formProps = Object.fromEntries(formData.entries());
+    
+    // 1. Capture User Data from localStorage to identify the applicant
+    const userDataStr = localStorage.getItem('flypath_user');
+    const userData = userDataStr ? JSON.parse(userDataStr) : {};
+    
+    const payload = {
+      ...formProps,
+      userId: userData.id || userData._id, 
+      segment: 'skills' 
+    };
 
     try {
+      // 2. Submit to the universal application endpoint
       const res = await fetch('/api/apply', { 
         method: 'POST', 
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...data, segment: 'skills' }) 
+        body: JSON.stringify(payload) 
       });
+
       const result = await res.json();
+
       if (res.ok && result.id) {
+        // 3. Generate invoice and redirect to payment
         const invoiceUrl = await createCryptoInvoice(result.id); 
-        if (invoiceUrl) window.location.href = invoiceUrl;
+        if (invoiceUrl) {
+            window.location.href = invoiceUrl;
+        } else {
+            alert("Payment gateway connection failed. Please try again.");
+            setLoading(false);
+        }
+      } else {
+        alert(result.error || "Submission failed. Please check if you are logged in.");
+        setLoading(false);
       }
-    } catch (err) { alert("Submission failed"); } finally { setLoading(false); }
+    } catch (err) { 
+        console.error("Skills Submit Error:", err);
+        alert("Server connection failed."); 
+        setLoading(false); 
+    }
   };
 
   return (
@@ -49,7 +77,6 @@ export default function SkillsApplication() {
           </div>
           
           <form onSubmit={handleSubmit} className="p-10 space-y-8">
-            {/* FULL PERSONAL INFO */}
             <div className="space-y-4">
                <h3 className="font-bold text-slate-800 flex items-center gap-2 uppercase text-sm"><User size={18} className="text-blue-600" /> Applicant Identity</h3>
                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -74,7 +101,6 @@ export default function SkillsApplication() {
                <input name="address" placeholder="Full Residential Address" required className="w-full p-4 bg-slate-50 border rounded-xl outline-none" />
             </div>
 
-            {/* SKILLS SPECIFIC */}
             <div className="pt-8 border-t border-slate-100 space-y-6">
               <h3 className="font-bold text-slate-800 flex items-center gap-2 uppercase text-sm"><Zap size={18} className="text-blue-600" /> Professional Experience</h3>
               <input name="trade" placeholder="Primary Trade (e.g. Electrician, Construction)" required className="w-full p-4 border rounded-xl outline-none" />

@@ -22,25 +22,53 @@ export default function FamilyApplication() {
   const addDependent = () => setDependents([...dependents, { name: '', relationship: '', age: '' }]);
   const removeDependent = (index: number) => setDependents(dependents.filter((_, i) => i !== index));
 
+  // FIXED HANDLESUBMIT
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+
     const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData.entries());
-    const finalData = { ...data, dependentsList: dependents, segment: 'family' };
+    const formProps = Object.fromEntries(formData.entries());
+    
+    // 1. Capture User ID from localStorage to fix "Missing User ID" error
+    const userDataStr = localStorage.getItem('flypath_user');
+    const userData = userDataStr ? JSON.parse(userDataStr) : {};
+    
+    const payload = {
+      ...formProps,
+      userId: userData.id || userData._id, 
+      dependentsList: dependents,
+      segment: 'family' 
+    };
 
     try {
       const res = await fetch('/api/apply', { 
         method: 'POST', 
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(finalData) 
+        body: JSON.stringify(payload) 
       });
+
       const result = await res.json();
+
       if (res.ok && result.id) {
+        // 2. Trigger the NOWPayments redirect using the returned unique ID
         const invoiceUrl = await createCryptoInvoice(result.id); 
-        if (invoiceUrl) window.location.href = invoiceUrl;
+        if (invoiceUrl) {
+            window.location.href = invoiceUrl;
+        } else {
+            alert("Payment link generation failed. Please check your network.");
+            setLoading(false);
+        }
+      } else {
+        // Displays error if User ID is missing or database validation fails
+        alert(result.error || result.details || "Please ensure you are logged in.");
+        setLoading(false);
       }
-    } catch (err) { alert("Submission error."); } finally { setLoading(false); }
+    } catch (err) { 
+        console.error("Family Submit Error:", err);
+        alert("Server error. Please try again later."); 
+        setLoading(false); 
+    }
   };
 
   return (
@@ -54,7 +82,6 @@ export default function FamilyApplication() {
           </div>
           
           <form onSubmit={handleSubmit} className="p-10 space-y-8">
-            {/* FULL PERSONAL INFORMATION */}
             <div className="space-y-4">
               <h3 className="font-bold text-slate-800 flex items-center gap-2 uppercase text-sm"><User size={18} className="text-orange-600" /> Principal Identity</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -79,18 +106,16 @@ export default function FamilyApplication() {
               <input name="address" placeholder="Full Residential Address" required className="w-full p-4 bg-orange-50 border border-orange-100 rounded-xl outline-none" />
             </div>
 
-            {/* FAMILY SPECIFIC */}
             <div className="pt-8 border-t border-orange-50 space-y-6">
               <select name="maritalStatus" required className="w-full p-4 bg-slate-50 border rounded-xl outline-none">
                 <option value="">Marital Status</option>
-                <option value="Single">Single</option>
+                <option value="Single">Single Parent</option>
                 <option value="Married">Married</option>
                 <option value="Divorced">Divorced</option>
               </select>
               <textarea name="purpose" placeholder="Describe your family's primary reason for relocation..." required className="w-full p-4 border rounded-xl h-24 outline-none" />
             </div>
 
-            {/* DEPENDENTS (OPTIONAL) */}
             <div className="pt-8 border-t border-orange-50 space-y-6">
               <div className="flex justify-between items-center">
                 <h3 className="font-bold flex items-center gap-2 text-orange-600 uppercase text-sm"><Heart size={18} /> Dependents (Optional)</h3>
@@ -110,7 +135,7 @@ export default function FamilyApplication() {
             </div>
 
             <button disabled={loading} className="w-full bg-orange-600 hover:bg-orange-700 text-white py-6 rounded-2xl font-black uppercase tracking-[0.2em] shadow-lg flex items-center justify-center gap-3">
-              {loading ? "Redirecting..." : "Finalize & Pay $69.99"}
+              {loading ? "Initializing..." : "Finalize & Pay $69.99"}
               <ShieldCheck size={20} />
             </button>
           </form>
