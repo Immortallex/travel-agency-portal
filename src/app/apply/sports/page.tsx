@@ -112,7 +112,7 @@ export default function SportsApplication() {
                 <option value="Pool">Pool</option>
               </select>
 
-              <input name="video" placeholder="Highlight Reel Link (YouTube/Vimeo)" required className="w-full p-4 border rounded-xl outline-none" />
+              <input name="video" placeholder="Highlight Link (YouTube/Google docs)" required className="w-full p-4 border rounded-xl outline-none" />
               <textarea name="history" placeholder="Position (e.g Striker, Defender...)" required className="w-full p-4 border rounded-xl h-32 outline-none" />
             </div>
 
