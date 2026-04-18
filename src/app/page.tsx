@@ -141,8 +141,8 @@ export default function HomePage() {
             {/* TRUST INDICATOR */}
             <div>
               <h4 className="text-white font-bold uppercase tracking-widest text-sm mb-6 items-center text-center">Our Assurance</h4>
-              <div className="bg-white/5 border border-white/10 p-6 rounded-3xl">
-                <ShieldCheck className="text-blue-500 mb-3 items-center text-center" size={32} />
+              <div className="bg-white/5 border border-white/10 p-6 rounded-3xl items-center text-center">
+                <ShieldCheck className="text-blue-500 mb-3" size={32} />
                 <p className="text-xs text-slate-300 font-medium leading-tight text-center">
                   Verified and secure processing for all relocation categories.
                 </p>
