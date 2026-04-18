@@ -4,7 +4,10 @@ import { useRouter } from 'next/navigation';
 import { 
   Globe, Trophy, GraduationCap, Mic2, HeartHandshake, 
   Briefcase, MessageCircle, Users, Percent, MapPin, 
-  Mail, Phone, Instagram, Twitter, Facebook, ShieldCheck 
+  Mail, Phone, ShieldCheck, 
+  Facebook as FacebookIcon,
+  Instagram as InstagramIcon,
+  Twitter as TwitterIcon 
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 
