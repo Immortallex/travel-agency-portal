@@ -5,9 +5,10 @@ import {
   Globe, Trophy, GraduationCap, Mic2, HeartHandshake, 
   Briefcase, MessageCircle, Users, Percent, MapPin, 
   Mail, Phone, ShieldCheck, 
-  Facebook as FacebookIcon,
-  Instagram as InstagramIcon,
-  Twitter as TwitterIcon 
+  // We import them with specific names to avoid ReferenceErrors
+  Instagram as InstagramIcon, 
+  Twitter as TwitterIcon, 
+  Facebook as FacebookIcon 
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 
@@ -107,17 +108,17 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CONTACT & SOCIAL INFORMATION SECTION */}
+      {/* CONTACT & SOCIAL INFORMATION */}
       <section className="bg-slate-50 py-24 px-6 border-t border-slate-100">
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
           {/* Address */}
           <div className="space-y-4">
             <h4 className="text-blue-600 font-black uppercase tracking-widest text-sm flex items-center gap-2">
-              <MapPin size={18} /> Physical Presence
+              <MapPin size={18} /> Physical Address
             </h4>
             <p className="text-slate-600 font-medium leading-relaxed">
-              [Insert your physical address here]<br />
-              City, Country Postal Code
+              [3897 Venture Place, Slave Lake]<br />
+              Alberta, Canada T0G 2B3
             </p>
           </div>
 
@@ -127,29 +128,29 @@ export default function HomePage() {
               <MessageCircle size={18} /> Get In Touch
             </h4>
             <div className="space-y-2">
-              <a href="mailto:support@flypathtravels.com" className="flex items-center gap-3 text-slate-600 hover:text-blue-600 transition-colors">
-                <Mail size={18} /> support@flypathtravels.com
+              <a href="mailto:info@flypathtravels.com" className="flex items-center gap-3 text-slate-600 hover:text-blue-600 transition-colors">
+                <Mail size={18} /> info@flypathtravels.com
               </a>
               <a href="tel:+1234567890" className="flex items-center gap-3 text-slate-600 hover:text-blue-600 transition-colors">
-                <Phone size={18} /> +1 (234) 567-890
+                <Phone size={18} /> +1 (772) 203-6075
               </a>
             </div>
           </div>
 
-          {/* Social Links */}
+          {/* Social Links - FIXED VARIABLE NAMES HERE */}
           <div className="space-y-4">
             <h4 className="text-blue-600 font-black uppercase tracking-widest text-sm flex items-center gap-2">
               <Globe size={18} /> Social Connectivity
             </h4>
             <div className="flex gap-4">
               <a href="#" className="bg-white p-3 rounded-xl shadow-sm text-slate-400 hover:text-blue-600 transition-all hover:scale-110">
-                <Instagram size={20} />
+                <InstagramIcon size={20} />
               </a>
               <a href="#" className="bg-white p-3 rounded-xl shadow-sm text-slate-400 hover:text-blue-400 transition-all hover:scale-110">
-                <Twitter size={20} />
+                <TwitterIcon size={20} />
               </a>
               <a href="#" className="bg-white p-3 rounded-xl shadow-sm text-slate-400 hover:text-blue-800 transition-all hover:scale-110">
-                <Facebook size={20} />
+                <FacebookIcon size={20} />
               </a>
             </div>
           </div>
