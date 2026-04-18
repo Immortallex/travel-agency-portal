@@ -6,9 +6,9 @@ import {
   Briefcase, MessageCircle, Users, Percent, MapPin, 
   Mail, Phone, ShieldCheck,
   // Using standard names that exist in Lucide
-  Instagram as InstagramIcon,
-  Facebook as FacebookIcon,
-  Twitter as TwitterIcon
+  Instagram as Instagram,
+  Facebook as Facebook,
+  Twitter as Twitter
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 
