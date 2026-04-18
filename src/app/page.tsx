@@ -125,11 +125,11 @@ export default function HomePage() {
               <ul className="space-y-4">
                 <li className="flex items-start gap-4 text-slate-400 hover:text-white transition-colors group">
                   <MapPin className="text-blue-500 shrink-0" size={20} />
-                  <span className="text-sm">123 Travel Plaza, Business District,<br />City, Country (Edit Address)</span>
+                  <span className="text-sm">3897 Venture Place,<br />Slave Lake Alberta, Canada T0G 2B3</span>
                 </li>
                 <li className="flex items-center gap-4 text-slate-400 hover:text-white transition-colors group">
                   <Phone className="text-blue-500 shrink-0" size={20} />
-                  <span className="text-sm">+1 (234) 567-890</span>
+                  <span className="text-sm">+1 (772) 203-6076</span>
                 </li>
                 <li className="flex items-center gap-4 text-slate-400 hover:text-white transition-colors group">
                   <Mail className="text-blue-500 shrink-0" size={20} />
@@ -140,10 +140,10 @@ export default function HomePage() {
 
             {/* TRUST INDICATOR */}
             <div>
-              <h4 className="text-white font-bold uppercase tracking-widest text-sm mb-6">Our Assurance</h4>
+              <h4 className="text-white font-bold uppercase tracking-widest text-sm mb-6" center>Our Assurance</h4>
               <div className="bg-white/5 border border-white/10 p-6 rounded-3xl">
                 <ShieldCheck className="text-blue-500 mb-3" size={32} />
-                <p className="text-xs text-slate-300 font-medium leading-tight">
+                <p className="text-xs text-slate-300 font-medium leading-tight" center>
                   Verified and secure processing for all relocation categories.
                 </p>
               </div>
