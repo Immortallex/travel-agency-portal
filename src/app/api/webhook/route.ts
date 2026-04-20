@@ -18,9 +18,10 @@ export async function POST(req: Request) {
     // 2. Filter for successful payment statuses
     if (body.payment_status === 'finished' || body.payment_status === 'confirmed') {
       
-      // 3. Generate the Unique Tracking ID
-      // Format: FLY - [5 Random Alphanumeric Characters]
-      const trackingId = `FLY-${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
+      // 3. Generate the Unique Tracking ID in requested format: FP-2026-XXXX-XXXX
+      const segment1 = Math.random().toString(36).substring(2, 6).toUpperCase();
+      const segment2 = Math.random().toString(36).substring(2, 6).toUpperCase();
+      const trackingId = `FP-2026-${segment1}-${segment2}`;
 
       // NEW: Save the Tracking ID to the Database
       await dbConnect();

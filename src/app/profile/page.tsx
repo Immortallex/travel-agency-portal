@@ -3,36 +3,56 @@ export const dynamic = 'force-dynamic';
 
 import React, { useEffect, useState } from 'react';
 import Navbar from '@/components/Navbar';
-import { FileText, Clock, CheckCircle, ArrowRight, User as UserIcon, LogOut } from 'lucide-react';
+import { FileText, CheckCircle, ArrowRight, User as UserIcon, LogOut, ExternalLink, Loader2 } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function ProfilePage() {
-  const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
+  const router = useRouter();
 
   useEffect(() => {
-    // 1. Captures User Info from LocalStorage
-    const storedUser = localStorage.getItem('flypath_user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-
-    const fetchApps = async () => {
+    const fetchUserData = async () => {
       try {
-        const res = await fetch('/api/user/applications');
+        // 1. Captures User Info from LocalStorage
+        const storedUser = JSON.parse(localStorage.getItem('flypath_user') || '{}');
+        
+        if (!storedUser.email) {
+          router.push('/auth');
+          return;
+        }
+
+        // 2. Fetch fresh data from MongoDB to get trackingId and paymentStatus
+        const res = await fetch(`/api/user/profile?email=${storedUser.email.toLowerCase()}`);
+        const data = await res.json();
+
         if (res.ok) {
-          const data = await res.json();
-          setApplications(data);
+          setUser(data.user);
         }
       } catch (err) {
-        console.error("Error loading applications", err);
+        console.error("Error loading profile:", err);
       } finally {
         setLoading(false);
       }
     };
-    fetchApps();
-  }, []);
+
+    fetchUserData();
+  }, [router]);
+
+  const handleSignOut = () => {
+    localStorage.removeItem('flypath_user');
+    window.location.href = '/';
+  };
+
+  if (loading) return (
+    <div className="min-h-screen bg-[#0A192F] flex items-center justify-center">
+      <Loader2 className="text-blue-500 animate-spin" size={48} />
+    </div>
+  );
+
+  // Database Check: Logic for paid status
+  const isPaid = user?.paymentStatus === 'paid';
 
   return (
     <div className="min-h-screen bg-[#0A192F] text-white pb-20 pt-28">
@@ -41,18 +61,18 @@ export default function ProfilePage() {
         {/* WELCOME SECTION */}
         <div className="mb-12">
           <h1 className="text-4xl md:text-6xl font-black uppercase italic tracking-tighter">
-            Welcome, <span className="text-blue-500">{user?.fullName || user?.name || "Traveler"}</span>
+            Welcome, <span className="text-blue-500">{user?.fullName || "Traveler"}</span>
           </h1>
           <p className="text-slate-400 font-bold uppercase tracking-[0.3em] text-xs mt-2">
-            Account ID: {user?.id || user?._id || "Not Authenticated"}
+            Account Email: {user?.email || "Not Authenticated"}
           </p>
         </div>
 
         <div className="flex flex-col md:flex-row gap-8">
           {/* Sidebar */}
           <div className="w-full md:w-1/3">
-            <div className="bg-white/5 border border-white/10 rounded-[2.5rem] p-8">
-              <div className="w-20 h-20 bg-blue-600 rounded-full flex items-center justify-center mb-6 shadow-lg shadow-blue-500/20">
+            <div className="bg-white/5 border border-white/10 rounded-[2.5rem] p-8 shadow-2xl">
+              <div className="w-20 h-20 bg-blue-600 rounded-[2rem] flex items-center justify-center mb-6 shadow-lg shadow-blue-500/20">
                 <UserIcon size={40} className="text-white" />
               </div>
               <h2 className="text-2xl font-black uppercase tracking-tighter">Applicant Portal</h2>
@@ -61,10 +81,11 @@ export default function ProfilePage() {
               <div className="mt-10 space-y-4">
                 <div className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5">
                   <span className="text-[10px] font-black uppercase text-slate-400">Completed Applications</span>
-                  <span className="font-black text-blue-500">{applications.length}</span>
+                  {/* Updates to 1 for successful applicants */}
+                  <span className="font-black text-blue-500">{isPaid ? '1' : '0'}</span>
                 </div>
                 <button 
-                  onClick={() => { localStorage.removeItem('flypath_user'); window.location.href='/'; }}
+                  onClick={handleSignOut}
                   className="w-full flex items-center justify-center gap-2 p-4 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all"
                 >
                   <LogOut size={14} /> Sign Out
@@ -80,50 +101,37 @@ export default function ProfilePage() {
               Active Relocation Files
             </h3>
 
-            {loading ? (
-              <div className="animate-pulse space-y-4">
-                {[1, 2].map(i => <div key={i} className="h-32 bg-white/5 rounded-[2.5rem]" />)}
-              </div>
-            ) : applications.length > 0 ? (
+            {isPaid ? (
+              // Success State: Display trackingId and View Button
               <div className="space-y-4">
-                {applications.map((app: any) => (
-                  <div key={app.id || app._id} className="bg-white/5 border border-white/10 rounded-[2.5rem] p-8 hover:bg-white/[0.07] transition-all">
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-                      <div>
-                        <div className="flex items-center gap-3 mb-2">
-                          <span className="text-[10px] font-black uppercase bg-blue-600 px-3 py-1 rounded-full">
-                            {app.segment} Pathway
-                          </span>
-                          {app.status === 'paid' ? (
-                            <span className="flex items-center gap-1 text-[10px] font-black uppercase text-green-500">
-                              <CheckCircle size={12} /> Verified
-                            </span>
-                          ) : (
-                            <span className="flex items-center gap-1 text-[10px] font-black uppercase text-amber-500">
-                              <Clock size={12} /> Pending Payment
-                            </span>
-                          )}
-                        </div>
-                        <h4 className="text-xl font-black uppercase tracking-tight">Case ID: #{app.uniqueId || app._id.slice(-6)}</h4>
-                        <p className="text-slate-400 text-[10px] font-bold uppercase mt-1">Submitted: {new Date(app.createdAt).toLocaleDateString()}</p>
+                <div className="bg-white/5 border border-blue-500/30 rounded-[2.5rem] p-10 hover:bg-white/[0.07] transition-all shadow-xl">
+                  <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                    <div>
+                      <div className="flex items-center gap-3 mb-2">
+                        <span className="flex items-center gap-1 text-[10px] font-black uppercase text-green-500">
+                          <CheckCircle size={14} /> Verified & Paid
+                        </span>
                       </div>
-
-                      {app.status === 'pending' && (
-                        <Link 
-                          href={app.paymentUrl || '#'} 
-                          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-2xl font-black uppercase text-xs tracking-widest transition-all"
-                        >
-                          Resume & Pay <ArrowRight size={16} />
-                        </Link>
-                      )}
+                      <h4 className="text-2xl font-black uppercase tracking-tight">Case ID: {user.trackingId}</h4>
+                      <p className="text-slate-400 text-[10px] font-bold uppercase mt-1">Application Status: Official File Generated</p>
                     </div>
+
+                    <Link 
+                      href={`/track/${user.trackingId}`} 
+                      className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-2xl font-black uppercase text-xs tracking-widest transition-all shadow-lg shadow-blue-600/20"
+                    >
+                      View Official File <ExternalLink size={16} />
+                    </Link>
                   </div>
-                ))}
+                </div>
               </div>
             ) : (
+              // Default State: No active files found
               <div className="bg-white/5 border border-dashed border-white/10 rounded-[2.5rem] p-20 text-center">
                 <p className="text-slate-500 font-black uppercase tracking-widest text-sm">No active relocation files found.</p>
-                <Link href="/apply" className="text-blue-500 text-[10px] font-black uppercase mt-4 inline-block hover:underline">Start an application today</Link>
+                <Link href="/auth" className="text-blue-500 text-[10px] font-black uppercase mt-4 inline-block hover:underline">
+                  Start an application today
+                </Link>
               </div>
             )}
           </div>
