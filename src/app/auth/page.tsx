@@ -72,6 +72,7 @@ export default function AuthPage() {
         
         <form onSubmit={handleSubmit} className="space-y-4">
           {authMode === 'signup' && (
+            // CORRECTION: name="fullName" now matches your User.ts schema
             <input name="fullName" placeholder="Full Name" className="w-full p-4 border rounded-2xl bg-slate-50 focus:outline-blue-600" required />
           )}
           
