@@ -8,14 +8,14 @@ import { sendWelcomeEmail } from '@/lib/emailService';
 export async function POST(req: Request) {
   try {
     await dbConnect();
-    const { name, email, password } = await req.json();
+    const { fullName, email, password } = await req.json();
 
     const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (existingUser) return NextResponse.json({ error: "Email exists" }, { status: 400 });
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({ 
-      fullName: name, 
+      fullName: fullName, 
       email: email.toLowerCase(), 
       password: hashedPassword 
     });
