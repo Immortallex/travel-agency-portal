@@ -63,9 +63,9 @@ export default function ProfilePage() {
           <h1 className="text-4xl md:text-6xl font-black uppercase italic tracking-tighter">
             Welcome, <span className="text-blue-500">{user?.fullName || "Traveler"}</span>
           </h1>
-          {/* Modified section below */}
+          {/* UPDATED: Displays Account ID instead of Account Email */}
           <p className="text-slate-400 font-bold uppercase tracking-[0.3em] text-xs mt-2">
-            Account ID: {user?.email || "Not Authenticated"}
+            Account ID: {user?._id || "Verifying..."}
           </p>
         </div>
 
