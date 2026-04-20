@@ -21,7 +21,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     // 2. Search for the user using the trackingId and check for paid status
     const user = await User.findOne({ 
       trackingId: trackingId,
-      paymentStatus: "paid" 
+      status: "paid" 
     });
 
     // 3. Handle cases where the info is wrong
@@ -40,7 +40,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
         trackingId: user.trackingId,
         fullName: user.fullName,
         email: user.email,
-        paymentStatus: user.paymentStatus,
+        status: user.status,
         createdAt: user.createdAt,
       }
     }, { status: 200 });

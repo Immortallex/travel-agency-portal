@@ -24,12 +24,11 @@ export default function ProfilePage() {
           return;
         }
 
-        // Generate or retrieve a stable Account ID for the session
-        // This creates a unique numeric ID peculiar to the current user's session
+        // Generate or retrieve a stable Account ID peculiar to the user session
         const generatedId = storedUser.id ? storedUser.id.slice(-6).toUpperCase() : Math.floor(100000 + Math.random() * 900000);
         setAccountId(`FP-ACC-${generatedId}`);
 
-        // 2. Fetch fresh data from MongoDB to get trackingId and paymentStatus
+        // 2. Fetch fresh data from MongoDB to get trackingId and status
         const res = await fetch(`/api/user/profile?email=${storedUser.email.toLowerCase()}`);
         const data = await res.json();
 
@@ -57,8 +56,8 @@ export default function ProfilePage() {
     </div>
   );
 
-  // Database Check: Logic for paid status
-  const isPaid = user?.paymentStatus === 'paid';
+  // UPDATED: Logic now checks the 'status' field to match your MongoDB manual edits
+  const isPaid = user?.status === 'paid';
 
   return (
     <div className="min-h-screen bg-[#0A192F] text-white pb-20 pt-28">
@@ -69,7 +68,6 @@ export default function ProfilePage() {
           <h1 className="text-4xl md:text-6xl font-black uppercase italic tracking-tighter">
             Welcome, <span className="text-blue-500">{user?.fullName || "Traveler"}</span>
           </h1>
-          {/* UPDATED: Displays peculiar Account ID instead of Email */}
           <p className="text-slate-400 font-bold uppercase tracking-[0.3em] text-xs mt-2">
             Account ID: {accountId}
           </p>
@@ -117,6 +115,7 @@ export default function ProfilePage() {
                           <CheckCircle size={14} /> Verified & Paid
                         </span>
                       </div>
+                      {/* Displays the trackingId from your MongoDB */}
                       <h4 className="text-2xl font-black uppercase tracking-tight">Case ID: {user.trackingId}</h4>
                       <p className="text-slate-400 text-[10px] font-bold uppercase mt-1">Application Status: Official File Generated</p>
                     </div>
@@ -133,8 +132,8 @@ export default function ProfilePage() {
             ) : (
               <div className="bg-white/5 border border-dashed border-white/10 rounded-[2.5rem] p-20 text-center">
                 <p className="text-slate-500 font-black uppercase tracking-widest text-sm">No active relocation files found.</p>
-                {/* CORRECTED: Directs to internal pathways for logged-in user */}
-                <Link href="/apply" className="text-blue-500 text-[10px] font-black uppercase mt-4 inline-block hover:underline">
+                {/* CORRECTED: Directs to internal pathways for logged-in user instead of login page */}
+                <Link href="/pathways" className="text-blue-500 text-[10px] font-black uppercase mt-4 inline-block hover:underline">
                   Start an application today
                 </Link>
               </div>
