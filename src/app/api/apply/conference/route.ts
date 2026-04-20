@@ -34,13 +34,13 @@ export async function POST(req: NextRequest) {
     const newApplication = await Application.create({
       userId,
       category: "Conference",
-      uniqueId: generateFlyPathID(),
+      trackingId: generateFlyPathID(),
       passportUrl,
       details: confData,
       status: "Pending Payment",
     });
 
-    return NextResponse.json({ success: true, applicationId: newApplication.uniqueId });
+    return NextResponse.json({ success: true, applicationId: newApplication.trackingId });
   } catch (error) {
     return NextResponse.json({ error: "Conference submission failed" }, { status: 500 });
   }

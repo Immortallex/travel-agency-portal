@@ -20,7 +20,7 @@ export async function POST(req: Request) {
     } = data;
 
     // 3. Create unique identifier to prevent index clashes
-    const uniqueId = `FLY-${Math.floor(100000 + Math.random() * 900000)}`;
+    const trackingId = `FLY-${Math.floor(100000 + Math.random() * 900000)}`;
 
     const applicationData = {
       userId,
@@ -32,7 +32,7 @@ export async function POST(req: Request) {
       residenceCountry: country,
       destinationCountry: destination,
       segment: segment,
-      uniqueId: uniqueId,
+      trackingId: trackingId,
       // SAVES EVERY FORM QUESTION FROM ANY PAGE HERE
       segmentSpecificData: {
         ...allOtherQuestions
@@ -44,7 +44,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ 
       success: true, 
-      id: newApp.uniqueId // Used by createCryptoInvoice
+      id: newApp.trackingId // Used by createCryptoInvoice
     }, { status: 200 });
 
   } catch (error: any) {

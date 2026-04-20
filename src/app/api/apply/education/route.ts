@@ -35,13 +35,13 @@ export async function POST(req: NextRequest) {
     const newApplication = await Application.create({
       userId,
       category: "Education",
-      uniqueId: generateFlyPathID(),
+      trackingId: generateFlyPathID(),
       passportUrl,
       details: eduData,
       status: "Pending Payment",
     });
 
-    return NextResponse.json({ success: true, applicationId: newApplication.uniqueId });
+    return NextResponse.json({ success: true, applicationId: newApplication.trackingId });
   } catch (error) {
     return NextResponse.json({ error: "Education submission failed" }, { status: 500 });
   }

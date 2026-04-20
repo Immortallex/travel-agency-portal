@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
     const newApplication = await Application.create({
       userId,
       category: "Sports",
-      uniqueId: generateFlyPathID(),
+      trackingId: generateFlyPathID(),
       sportType: sportData.sportType,
       stats: sportData.stats,
       passportUrl,

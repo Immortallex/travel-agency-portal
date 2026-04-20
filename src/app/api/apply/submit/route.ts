@@ -24,12 +24,12 @@ export async function POST(req: NextRequest) {
       passportUrl = await uploadToS3(buffer, passportFile.name);
     }
 
-    const uniqueId = `FP-${new Date().getFullYear()}-${Math.random().toString(36).substring(7).toUpperCase()}`;
+    const trackingId = `FP-${new Date().getFullYear()}-${Math.random().toString(36).substring(7).toUpperCase()}`;
 
     const newApp = await Application.create({
       userId,
       category: details.category,
-      uniqueId,
+      trackingId,
       details,
       passportUrl,
       cvUrl: "", // Now strictly optional
