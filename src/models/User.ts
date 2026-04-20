@@ -16,6 +16,14 @@ const UserSchema = new mongoose.Schema({
     type: String, 
     required: [true, "Please provide a password"] 
   },
+  // Added fields for tracking and payment status
+  trackingId: { 
+    type: String 
+  },
+  paymentStatus: { 
+    type: String, 
+    default: 'pending' 
+  },
   resetToken: { 
     type: String 
   },

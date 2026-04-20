@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { sendTelegramNotification } from "@/lib/telegram";
+import dbConnect from "@/lib/db";
+import User from "@/models/User";
 
 // Initializing Resend with your Vercel Environment Variable
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -19,6 +21,13 @@ export async function POST(req: Request) {
       // 3. Generate the Unique Tracking ID
       // Format: FLY - [5 Random Alphanumeric Characters]
       const trackingId = `FLY-${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
+
+      // NEW: Save the Tracking ID to the Database
+      await dbConnect();
+      await User.findOneAndUpdate(
+        { email: body.customer_email }, 
+        { $set: { trackingId: trackingId, paymentStatus: 'paid' } }
+      );
 
       // NEW: Telegram Notification for Successful Transaction
       await sendTelegramNotification(`
