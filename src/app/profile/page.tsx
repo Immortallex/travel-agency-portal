@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation';
 export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
+  const [accountId, setAccountId] = useState(''); // New state for stable Account ID
   const router = useRouter();
 
   useEffect(() => {
@@ -22,6 +23,10 @@ export default function ProfilePage() {
           router.push('/auth');
           return;
         }
+
+        // Generate a stable random Account ID for this session
+        const randomId = `FP-${Math.floor(10000 + Math.random() * 90000)}`;
+        setAccountId(randomId);
 
         // 2. Fetch fresh data from MongoDB to get trackingId and paymentStatus
         const res = await fetch(`/api/user/profile?email=${storedUser.email.toLowerCase()}`);
@@ -63,9 +68,9 @@ export default function ProfilePage() {
           <h1 className="text-4xl md:text-6xl font-black uppercase italic tracking-tighter">
             Welcome, <span className="text-blue-500">{user?.fullName || "Traveler"}</span>
           </h1>
-          {/* UPDATED: Displays Account ID instead of Account Email */}
+          {/* UPDATED: Account Email section changed to Account ID */}
           <p className="text-slate-400 font-bold uppercase tracking-[0.3em] text-xs mt-2">
-            Account ID: {user?._id || "Verifying..."}
+            Account ID: {accountId || "Generating..."}
           </p>
         </div>
 
@@ -82,7 +87,6 @@ export default function ProfilePage() {
               <div className="mt-10 space-y-4">
                 <div className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5">
                   <span className="text-[10px] font-black uppercase text-slate-400">Completed Applications</span>
-                  {/* Updates to 1 for successful applicants */}
                   <span className="font-black text-blue-500">{isPaid ? '1' : '0'}</span>
                 </div>
                 <button 
