@@ -133,7 +133,7 @@ export default function ProfilePage() {
               <div className="bg-white/5 border border-dashed border-white/10 rounded-[2.5rem] p-20 text-center">
                 <p className="text-slate-500 font-black uppercase tracking-widest text-sm">No active relocation files found.</p>
                 {/* CORRECTED: Directs to internal pathways for logged-in user instead of login page */}
-                <Link href="/pathways" className="text-blue-500 text-[10px] font-black uppercase mt-4 inline-block hover:underline">
+                <Link href="/apply" className="text-blue-500 text-[10px] font-black uppercase mt-4 inline-block hover:underline">
                   Start an application today
                 </Link>
               </div>
