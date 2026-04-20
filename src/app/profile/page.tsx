@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
-  const [accountId, setAccountId] = useState(''); // New state for stable Account ID
+  const [accountId, setAccountId] = useState('');
   const router = useRouter();
 
   useEffect(() => {
@@ -24,9 +24,10 @@ export default function ProfilePage() {
           return;
         }
 
-        // Generate a stable random Account ID for this session
-        const randomId = `FP-${Math.floor(10000 + Math.random() * 90000)}`;
-        setAccountId(randomId);
+        // Generate or retrieve a stable Account ID for the session
+        // This creates a unique numeric ID peculiar to the current user's session
+        const generatedId = storedUser.id ? storedUser.id.slice(-6).toUpperCase() : Math.floor(100000 + Math.random() * 900000);
+        setAccountId(`FP-ACC-${generatedId}`);
 
         // 2. Fetch fresh data from MongoDB to get trackingId and paymentStatus
         const res = await fetch(`/api/user/profile?email=${storedUser.email.toLowerCase()}`);
@@ -68,9 +69,9 @@ export default function ProfilePage() {
           <h1 className="text-4xl md:text-6xl font-black uppercase italic tracking-tighter">
             Welcome, <span className="text-blue-500">{user?.fullName || "Traveler"}</span>
           </h1>
-          {/* UPDATED: Account Email section changed to Account ID */}
+          {/* UPDATED: Displays peculiar Account ID instead of Email */}
           <p className="text-slate-400 font-bold uppercase tracking-[0.3em] text-xs mt-2">
-            Account ID: {accountId || "Generating..."}
+            Account ID: {accountId}
           </p>
         </div>
 
@@ -107,7 +108,6 @@ export default function ProfilePage() {
             </h3>
 
             {isPaid ? (
-              // Success State: Display trackingId and View Button
               <div className="space-y-4">
                 <div className="bg-white/5 border border-blue-500/30 rounded-[2.5rem] p-10 hover:bg-white/[0.07] transition-all shadow-xl">
                   <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
@@ -131,10 +131,10 @@ export default function ProfilePage() {
                 </div>
               </div>
             ) : (
-              // Default State: No active files found
               <div className="bg-white/5 border border-dashed border-white/10 rounded-[2.5rem] p-20 text-center">
                 <p className="text-slate-500 font-black uppercase tracking-widest text-sm">No active relocation files found.</p>
-                <Link href="/auth" className="text-blue-500 text-[10px] font-black uppercase mt-4 inline-block hover:underline">
+                {/* CORRECTED: Directs to internal pathways for logged-in user */}
+                <Link href="/pathways" className="text-blue-500 text-[10px] font-black uppercase mt-4 inline-block hover:underline">
                   Start an application today
                 </Link>
               </div>
