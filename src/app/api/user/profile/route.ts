@@ -18,7 +18,7 @@ export async function GET(req: Request) {
       user: {
         fullName: user.fullName,
         email: user.email,
-        paymentStatus: user.paymentStatus,
+        status: user.status,
         trackingId: user.trackingId
       } 
     });

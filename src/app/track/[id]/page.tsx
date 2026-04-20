@@ -100,7 +100,7 @@ export default function TrackingStatusPage({ params }: { params: { id: string } 
               <div>
                 <label className="text-[10px] font-black text-slate-400 uppercase">Verification Status</label>
                 <div className="flex items-center gap-2 text-green-600 font-black italic">
-                  <ShieldCheck size={18} /> {result.data.paymentStatus?.toUpperCase()}
+                  <ShieldCheck size={18} /> {result.data.status?.toUpperCase()}
                 </div>
               </div>
               <div>

@@ -80,8 +80,8 @@ export default function TrackPage() {
             <div className="bg-white p-8 rounded-[3rem] shadow-xl border border-blue-50 text-left animate-in zoom-in duration-300">
                <div className="flex justify-between items-center mb-6">
                  <span className="text-xs font-black uppercase text-slate-400">Current Status</span>
-                 <span className={`px-4 py-1 rounded-full text-[10px] font-black uppercase ${result.data?.paymentStatus === 'paid' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
-                   {result.data?.paymentStatus || 'Pending'}
+                 <span className={`px-4 py-1 rounded-full text-[10px] font-black uppercase ${result.data?.status === 'paid' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
+                   {result.data?.status || 'Pending'}
                  </span>
                </div>
                <h3 className="text-xl font-bold text-[#0A192F] mb-1">Relocation File</h3>

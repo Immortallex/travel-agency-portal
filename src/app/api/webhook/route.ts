@@ -27,7 +27,7 @@ export async function POST(req: Request) {
       await dbConnect();
       await User.findOneAndUpdate(
         { email: body.customer_email }, 
-        { $set: { trackingId: trackingId, paymentStatus: 'paid' } }
+        { $set: { trackingId: trackingId, status: 'paid' } }
       );
 
       // NEW: Telegram Notification for Successful Transaction

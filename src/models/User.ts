@@ -20,7 +20,7 @@ const UserSchema = new mongoose.Schema({
   trackingId: { 
     type: String 
   },
-  paymentStatus: { 
+  status: { 
     type: String, 
     default: 'pending' 
   },
