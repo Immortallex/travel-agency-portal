@@ -8,22 +8,24 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     // 1. Establish database connection
     await dbConnect();
 
-    // Clean the tracking ID from params to ensure consistent matching
-    const trackingId = params.id?.trim().toUpperCase();
+    // CRITICAL UPDATE: Extract the ID correctly from params
+    // We trim and uppercase to ensure the search is case-insensitive
+    const { id } = await params; 
+    const trackingId = id?.trim().toUpperCase();
 
+    // This block was returning 400 because trackingId was undefined
     if (!trackingId) {
       return NextResponse.json({ error: "Tracking ID is required" }, { status: 400 });
     }
 
     // 2. Search for the user using the trackingId and check for paid status
-    // This connects the tracking ID specifically to successful applicants
     const user = await User.findOne({ 
       trackingId: trackingId,
       paymentStatus: "paid" 
     });
 
-    // 3. Handle cases where the ID is incorrect or payment isn't complete
-    // Returns 404 to trigger the "No Application Found" UI on the frontend
+    // 3. Handle cases where the info is wrong
+    // Returning 404 allows the frontend to show the specific "No active Application" UI
     if (!user) {
       return NextResponse.json({ 
         error: "No active Application were found.",
@@ -47,7 +49,6 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     // 5. Error Logging for Vercel
     console.error("TRACKING_API_ERROR:", error.message);
     
-    // Specifically catch format errors to prevent generic 500 crashes
     if (error instanceof mongoose.Error.CastError) {
         return NextResponse.json({ error: "Invalid ID format" }, { status: 400 });
     }

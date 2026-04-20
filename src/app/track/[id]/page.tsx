@@ -114,8 +114,10 @@ export default function TrackingStatusPage({ params }: { params: { id: string } 
           <div className="mt-20 p-8 bg-slate-50 border-t border-slate-200 rounded-xl relative overflow-hidden">
             <h4 className="text-xs font-black uppercase mb-2 text-slate-800">Official Notice:</h4>
             <p className="text-[10px] text-slate-500 leading-relaxed max-w-md">
-              This data page confirms the digital registration of the applicant's relocation file. 
-              The unique tracking ID is linked to a verified payment and is required for all physical processing steps.
+             A mail will be sent to you in 3 weeks after your application, this is to confirm your full application status.
+              This document serves as an official confirmation of relocation application initiation with FlyPath Travels. 
+              The holder is required to present this printed copy during physical verification. 
+              Verify authenticity at www.flypathtravels.com/track/
             </p>
             {/* Decorative Security Seal */}
             <div className="absolute right-8 top-1/2 -translate-y-1/2 w-24 h-24 border-4 border-blue-900/10 rounded-full flex items-center justify-center text-blue-900/10 font-black text-[10px] uppercase -rotate-12 select-none">
