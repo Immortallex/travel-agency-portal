@@ -36,6 +36,9 @@ export default function AuthPage() {
       if (res.ok) {
         if (authMode === 'forgot') {
           setSuccessMsg(data.message || 'Reset link sent to your email.');
+        } else if (authMode === 'signup') {
+          // Updated behavior for signup success
+          setSuccessMsg('Congratulations for signing up with Fly Path travels! Kindly login through the link sent to your email.');
         } else {
           localStorage.setItem('flypath_user', JSON.stringify(data.user));
           router.push('/profile');
