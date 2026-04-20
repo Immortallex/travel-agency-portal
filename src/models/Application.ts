@@ -16,7 +16,7 @@ const ApplicationSchema = new mongoose.Schema({
     required: true, 
     enum: ['conference', 'education', 'family', 'skills', 'sports', 'tech'] 
   },
-  trackingId: { 
+  uniqueId: { 
     type: String, 
     unique: true, 
     sparse: true, 

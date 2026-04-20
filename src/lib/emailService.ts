@@ -41,7 +41,7 @@ export async function sendWelcomeEmail(userEmail: string, userName: string) {
 /**
  * Sends a professional confirmation email with an attached PDF receipt.
  */
-export async function sendConfirmationEmail(userEmail: string, trackingId: string) {
+export async function sendConfirmationEmail(userEmail: string, uniqueId: string) {
   try {
     const doc = new jsPDF();
     doc.setFontSize(22);
@@ -49,7 +49,7 @@ export async function sendConfirmationEmail(userEmail: string, trackingId: strin
     doc.text("FlyPath Travels", 20, 30);
     
     doc.setFontSize(14);
-    doc.text(`Tracking ID: ${trackingId}`, 20, 60);
+    doc.text(`Tracking ID: ${uniqueId}`, 20, 60);
     doc.text(`Amount Paid: $69.99 (Crypto)`, 20, 70);
     doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, 80);
     
@@ -58,9 +58,9 @@ export async function sendConfirmationEmail(userEmail: string, trackingId: strin
     await transporter.sendMail({
       from: '"FlyPath Travels" <info@flypathtravels.com>',
       to: userEmail,
-      subject: `Application Successful - ${trackingId}`,
-      text: `Congratulations! Your application has been received. Your unique tracking ID is ${trackingId}.`,
-      attachments: [{ filename: `FlyPath_Receipt_${trackingId}.pdf`, content: pdfBuffer }],
+      subject: `Application Successful - ${uniqueId}`,
+      text: `Congratulations! Your application has been received. Your unique tracking ID is ${uniqueId}.`,
+      attachments: [{ filename: `FlyPath_Receipt_${uniqueId}.pdf`, content: pdfBuffer }],
     });
 
     return { success: true };

@@ -25,7 +25,7 @@ export async function approveApplication(appId: string) {
     html: `
       <div style="font-family: Arial; padding: 20px;">
         <h2>Congratulations ${user.fullName},</h2>
-        <p>Your application <strong>${app.trackingId}</strong> has been approved.</p>
+        <p>Your application <strong>${app.uniqueId}</strong> has been approved.</p>
         <p>Our legal team has officially started your visa sponsorship process. 
            Please monitor your portal for next steps.</p>
         <p>Best Regards,<br/>FlyPath Admin Team</p>
