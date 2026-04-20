@@ -4,12 +4,12 @@ import { sendTelegramNotification } from "@/lib/telegram";
 import dbConnect from "@/lib/db";
 import User from "@/models/User";
 
-// Initializing Resend with your Vercel Environment Variable
+// Initializing Resend with Vercel Environment Variable
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req: Request) {
   try {
-    // 1. Parse the incoming notification from NOWPayments
+    // 1. Parsing the incoming notification from NOWPayments
     const body = await req.json();
     
     // Log the incoming status for debugging in Vercel Logs
@@ -23,11 +23,16 @@ export async function POST(req: Request) {
       const segment2 = Math.random().toString(36).substring(2, 6).toUpperCase();
       const trackingId = `FP-2026-${segment1}-${segment2}`;
 
-      // NEW: Save the Tracking ID to the Database
+      // UPDATED: Saving to 'status' field to match your current MongoDB schema
       await dbConnect();
       await User.findOneAndUpdate(
-        { email: body.customer_email }, 
-        { $set: { trackingId: trackingId, status: 'paid' } }
+        { email: body.customer_email.toLowerCase() }, // Case-insensitive match
+        { 
+          $set: { 
+            trackingId: trackingId, 
+            status: 'paid' // Updated from paymentStatus
+          } 
+        }
       );
 
       // NEW: Telegram Notification for Successful Transaction
