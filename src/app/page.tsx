@@ -165,7 +165,7 @@ export default function HomePage() {
       </footer>
 
       {/* WHATSAPP FLOAT DESIGN */}
-      <a href="https://wa.me/..." className="fixed bottom-10 right-10 z-[9999] bg-[#25D366] p-5 rounded-2xl shadow-2xl hover:scale-110 transition-transform">
+      <a href="https://wa.me/15306083708" className="fixed bottom-10 right-10 z-[9999] bg-[#25D366] p-5 rounded-2xl shadow-2xl hover:scale-110 transition-transform">
         <MessageCircle size={30} className="text-white" />
       </a>
     </main>
